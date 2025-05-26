@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>الإحصائيات</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+      body {
+        font-family: Tahoma, sans-serif;
+        background: linear-gradient(to left, #76f0da, #acb6e5);
+        margin: 0;
+        padding: 2rem;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      header {
+        background-color: white;
+        width: 100%;
+        padding: 1rem 2rem;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        margin-bottom: 2rem;
+        border-radius: 12px;
+      }
+
+      header h1 {
+        margin: 0;
+        color: #333;
+      }
+
+      /* بطاقات الملخص */
+      .summary-cards {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 2rem;
+        flex-wrap: wrap;
+        justify-content: center;
+        width: 100%;
+        max-width: 1000px;
+      }
+
+      .summary-card {
+        background-color: white;
+        border-radius: 12px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        padding: 15px 25px;
+        flex: 1 1 200px;
+        text-align: center;
+        font-size: 18px;
+        color: #333;
+        font-weight: bold;
+      }
+
+      .summary-card span {
+        display: block;
+        font-size: 36px;
+        margin-top: 8px;
+        color: #45a049;
+      }
+
+      /* بطاقات الإحصائيات */
+      .stats-card {
+        background-color: white;
+        border-radius: 12px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        width: 600px;
+        max-width: 90vw;
+        padding: 20px;
+        margin-bottom: 2rem;
+        text-align: center;
+      }
+
+      canvas {
+        max-width: 100%;
+        height: 350px;
+      }
+
+      /* جدول الفعاليات */
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 2rem;
+      }
+
+      th,
+      td {
+        border: 1px solid #ddd;
+        padding: 10px;
+        text-align: center;
+        color: #333;
+      }
+
+      th {
+        background-color: #45a049;
+        color: white;
+      }
+
+      /* زر التحديث */
+      button {
+        background-color: #45a049;
+        border: none;
+        padding: 12px 25px;
+        border-radius: 8px;
+        color: white;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        margin-bottom: 2rem;
+      }
+
+      button:hover {
+        background-color: #388e3c;
+      }
+      .page-header {
+        position: relative; /* لازم عشان الزر ينحط داخله */
+        background-color: white;
+        width: 100%;
+        padding: 2rem;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        margin-bottom: 2rem;
+        border-radius: 12px;
+        text-align: center;
+      }
+
+      .page-header h1 {
+        margin: 0;
+        color: #333;
+        font-size: 28px;
+      }
+
+      .page-header p {
+        margin-top: 10px;
+        color: #555;
+        font-size: 16px;
+      }
+
+      .create-btn {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        background-color: #1976d2;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-size: 16px;
+        transition: background-color 0.3s, transform 0.3s;
+      }
+
+      .create-btn:hover {
+        background-color: #1565c0;
+        transform: scale(1.05);
+      }
+
+      /* بحث الفعاليات */
+      .search-container {
+        width: 600px;
+        max-width: 90vw;
+        margin-bottom: 1rem;
+        text-align: center;
+      }
+
+      input[type="search"] {
+        width: 100%;
+        padding: 10px 15px;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+        font-size: 16px;
+        direction: rtl;
+      }
+
+      @media (max-width: 650px) {
+        .summary-cards {
+          flex-direction: column;
+          align-items: center;
+        }
+
+        .summary-card {
+          width: 90%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="page-header">
+      <div class="header-top">
+        <h1>📊 الإحصائيات</h1>
+        <a href="dashboardorganizer.html" class="create-btn">🏠 الرئيسية</a>
+      </div>
+      <p>تحليل أداء الفعاليات والمشاركات</p>
+    </header>
+
+    <div class="summary-cards">
+      <div class="summary-card">
+        عدد الفعاليات
+        <span id="totalEvents">4</span>
+      </div>
+      <div class="summary-card">
+        إجمالي المشاركين
+        <span id="totalParticipants">245</span>
+      </div>
+      <div class="summary-card">
+        متوسط التقييم
+        <span id="averageRating">4.3</span>
+      </div>
+    </div>
+
+    <button id="refreshBtn">تحديث البيانات</button>
+
+    <div class="search-container">
+      <input type="search" id="searchInput" placeholder="ابحث عن فعالية..." />
+    </div>
+
+    <section class="stats-card">
+      <canvas id="participantsChart"></canvas>
+    </section>
+
+    <section class="stats-card">
+      <canvas id="ratingsChart"></canvas>
+    </section>
+
+    <section class="stats-card">
+      <h3>بيانات الفعاليات</h3>
+      <table id="eventsTable">
+        <thead>
+          <tr>
+            <th>اسم الفعالية</th>
+            <th>عدد المشاركين</th>
+            <th>التقييم</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>فعالية 1</td>
+            <td>50</td>
+            <td>4.5</td>
+          </tr>
+          <tr>
+            <td>فعالية 2</td>
+            <td>75</td>
+            <td>4.0</td>
+          </tr>
+          <tr>
+            <td>فعالية 3</td>
+            <td>30</td>
+            <td>3.8</td>
+          </tr>
+          <tr>
+            <td>فعالية 4</td>
+            <td>90</td>
+            <td>4.7</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <script>
+      let rawEvents = JSON.parse(localStorage.getItem("events")) || [];
+      let eventsParticipantsData =
+        JSON.parse(localStorage.getItem("eventsData")) || {};
+
+      let storedEvents = rawEvents.map((event, index) => {
+        const ratingKey = `rating_event_${index}`;
+        const rating = parseFloat(localStorage.getItem(ratingKey)) || 0;
+        const title = event.title;
+        const participants = eventsParticipantsData[title]?.length || 0;
+
+        return {
+          name: event.title || "فعالية بدون اسم",
+          participants: participants || 0,
+          rating: rating,
+        };
+      });
+
+      let initialEventsData = [
+        { name: "زيارة الدرعية", participants: 50, rating: 4.5 },
+        { name: "مركز اثراء", participants: 75, rating: 4.0 },
+        { name: " مغامرة العلا", participants: 30, rating: 3.8 },
+      ];
+      let eventsData = [...initialEventsData, ...storedEvents];
+
+      console.log("البيانات النهائية في eventsData:", eventsData);
+
+      function updateSummary() {
+        const totalEvents = eventsData.length;
+        const totalParticipants = eventsData.reduce(
+          (a, b) => a + b.participants,
+          0
+        );
+        const averageRating = (
+          eventsData.reduce((a, b) => a + b.rating, 0) / totalEvents
+        ).toFixed(1);
+
+        document.getElementById("totalEvents").textContent = totalEvents;
+        document.getElementById("totalParticipants").textContent =
+          totalParticipants;
+        document.getElementById("averageRating").textContent = averageRating;
+      }
+
+      // تحديث جدول الفعاليات
+      function updateTable(filteredData = eventsData) {
+        const tbody = document.querySelector("#eventsTable tbody");
+        tbody.innerHTML = ""; // حذف القديم
+        filteredData.forEach((event) => {
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+                <td>${event.name}</td>
+                <td>${event.participants}</td>
+                <td>${event.rating}</td>
+              `;
+          tbody.appendChild(tr);
+        });
+      }
+
+      // تحديث المخططات
+      let participantsChart, ratingsChart;
+      function createCharts(data) {
+        if (participantsChart) participantsChart.destroy();
+        if (ratingsChart) ratingsChart.destroy();
+
+        const ctxParticipants = document
+          .getElementById("participantsChart")
+          .getContext("2d");
+        participantsChart = new Chart(ctxParticipants, {
+          type: "bar",
+          data: {
+            labels: data.map((e) => e.name),
+            datasets: [
+              {
+                label: "عدد المشاركين",
+                data: data.map((e) => e.participants),
+                backgroundColor: "rgba(54, 162, 235, 0.7)",
+                borderColor: "rgba(54, 162, 235, 1)",
+                borderWidth: 1,
+                borderRadius: 6,
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            scales: {
+              y: {
+                beginAtZero: true,
+                ticks: { stepSize: 10 },
+              },
+            },
+            plugins: {
+              legend: {
+                labels: { color: "#333", font: { size: 14 } },
+              },
+            },
+          },
+        });
+
+        const positive = data.filter((e) => e.rating >= 4).length;
+        const negative = data.length - positive;
+
+        const ctxRatings = document
+          .getElementById("ratingsChart")
+          .getContext("2d");
+        ratingsChart = new Chart(ctxRatings, {
+          type: "doughnut",
+          data: {
+            labels: ["إيجابي", "سلبي"],
+            datasets: [
+              {
+                label: "نسبة التقييمات",
+                data: [positive, negative],
+                backgroundColor: [
+                  "rgba(69, 160, 73, 0.8)",
+                  "rgba(220, 53, 69, 0.8)",
+                ],
+                borderColor: ["rgba(69, 160, 73, 1)", "rgba(220, 53, 69, 1)"],
+                borderWidth: 1,
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            plugins: {
+              legend: {
+                position: "bottom",
+                labels: { color: "#333", font: { size: 14 } },
+              },
+            },
+          },
+        });
+      }
+
+      function refreshData() {
+        eventsData = eventsData.map((e) => ({
+          name: e.name,
+          participants: e.participants + Math.floor(Math.random() * 10),
+          rating: e.rating, // التقييم يبقى ثابت هنا
+        }));
+
+        updateSummary();
+        updateTable();
+        createCharts(eventsData);
+      }
+
+      // فلترة الجدول والمخططات بناء على البحث
+      document.getElementById("searchInput").addEventListener("input", (e) => {
+        const term = e.target.value.trim();
+        const filtered = eventsData.filter((ev) => ev.name.includes(term));
+        updateTable(filtered);
+        createCharts(filtered);
+        updateSummaryFiltered(filtered);
+      });
+
+      // تحديث الملخص مع بيانات مفلترة
+      function updateSummaryFiltered(filteredData) {
+        const totalEvents = filteredData.length;
+        const totalParticipants = filteredData.reduce(
+          (a, b) => a + b.participants,
+          0
+        );
+        const averageRating =
+          totalEvents > 0
+            ? (
+                filteredData.reduce((a, b) => a + b.rating, 0) / totalEvents
+              ).toFixed(1)
+            : 0;
+
+        document.getElementById("totalEvents").textContent = totalEvents;
+        document.getElementById("totalParticipants").textContent =
+          totalParticipants;
+        document.getElementById("averageRating").textContent = averageRating;
+      }
+
+      updateSummary();
+      updateTable();
+      createCharts(eventsData);
+
+      document
+        .getElementById("refreshBtn")
+        .addEventListener("click", refreshData);
+    </script>
+  </body>
+</html>

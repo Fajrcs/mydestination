@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <title>إرسال إشعار</title>
+    <style>
+      body {
+        font-family: Tahoma, sans-serif;
+        background: linear-gradient(to left, #76f0da, #acb6e5);
+        margin: 0;
+        padding: 0;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      header {
+        background-color: white;
+        width: 100%;
+        padding: 1rem 2rem;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        position: relative;
+        margin-bottom: 2rem;
+      }
+
+      header h1 {
+        margin: 0;
+        color: #333;
+      }
+
+      header p {
+        color: #777;
+        margin-top: 4px;
+      }
+
+      .back-button {
+        position: absolute;
+        top: 1rem;
+        left: 2rem;
+        background-color: #1976d2;
+        color: white;
+        padding: 8px 14px;
+        border-radius: 6px;
+        text-decoration: none;
+        font-weight: bold;
+        transition: background-color 0.3s ease;
+      }
+
+      .back-button:hover {
+        background-color: #0d47a1;
+      }
+
+      .container {
+        background-color: white;
+        border-radius: 12px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        padding: 20px 30px;
+        max-width: 500px;
+        width: 90%;
+        box-sizing: border-box;
+        text-align: right;
+      }
+
+      label {
+        font-size: 18px;
+        color: #333;
+        display: block;
+        margin-bottom: 8px;
+      }
+
+      textarea {
+        width: 100%;
+        height: 120px;
+        font-size: 16px;
+        border-radius: 10px;
+        border: 1px solid #ccc;
+        padding: 10px;
+        resize: vertical;
+        box-sizing: border-box;
+        font-family: Tahoma, sans-serif;
+      }
+
+      button {
+        margin-top: 15px;
+        padding: 12px 20px;
+        background-color: #45a049;
+        color: white;
+        font-size: 16px;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        display: block;
+        width: 100%;
+      }
+
+      button:hover {
+        background-color: #388e3c;
+      }
+
+      /* صندوق الإشعارات السابقة */
+      .notifications-list {
+        margin-top: 25px;
+        max-height: 250px;
+        overflow-y: auto;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        padding: 15px;
+        background-color: #f9f9f9;
+        font-size: 16px;
+        color: #444;
+      }
+
+      .notification-item {
+        border-bottom: 1px solid #ddd;
+        padding: 8px 0;
+        direction: rtl;
+      }
+
+      .notification-item:last-child {
+        border-bottom: none;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <a href="dashboardorganizer.html" class="back-button">← 🏠 الرئيسية</a>
+      <h1>إرسال إشعار</h1>
+      <p>أرسل رسالة تنبيهية للمشاركين في فعالياتك</p>
+    </header>
+
+    <div class="container">
+      <label for="notification">نص الإشعار:</label>
+      <textarea id="notification" placeholder="اكتب إشعارك هنا..."></textarea>
+      <button onclick="sendNotification()">إرسال</button>
+
+      <div class="notifications-list" id="notifications-list">
+        <!-- هنا تظهر الإشعارات السابقة -->
+      </div>
+    </div>
+
+    <script>
+      function loadNotifications() {
+        const saved = localStorage.getItem("notifications");
+        if (saved) {
+          return JSON.parse(saved);
+        }
+        return [];
+      }
+
+      // عرض الإشعارات على الصفحة
+      function displayNotifications() {
+        const notifications = loadNotifications();
+        const container = document.getElementById("notifications-list");
+        container.innerHTML = "";
+
+        if (notifications.length === 0) {
+          container.textContent = "لا توجد إشعارات سابقة";
+          return;
+        }
+
+        notifications.forEach((msg, idx) => {
+          const div = document.createElement("div");
+          div.classList.add("notification-item");
+          div.textContent = `${idx + 1}. ${msg}`;
+          container.appendChild(div);
+        });
+      }
+
+      // إرسال إشعار وتخزينه
+      function sendNotification() {
+        const textarea = document.getElementById("notification");
+        const message = textarea.value.trim();
+
+        if (!message) {
+          alert("يرجى كتابة نص الإشعار");
+          return;
+        }
+
+        const notifications = loadNotifications();
+
+        notifications.unshift(message); // نضيف في البداية ليظهر أولاً
+
+        localStorage.setItem("notifications", JSON.stringify(notifications));
+
+        displayNotifications();
+
+        // مسح الحقل
+        textarea.value = "";
+
+        alert("تم إرسال الإشعار.");
+      }
+
+      // تحميل وعرض الإشعارات عند فتح الصفحة
+      displayNotifications();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>قائمة الفعاليات</title>
+  <style>
+    body {
+      font-family: Tahoma, sans-serif;
+      background: linear-gradient(to left, #76f0da, #acb6e5);
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    header {
+      background-color: white;
+      width: 100%;
+      padding: 1rem 2rem;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+
+    header h1 {
+      margin: 0;
+      color: #333;
+    }
+
+    .create-btn-container {
+      position: absolute;
+      top: 1rem;
+      right: 2rem;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+    }
+
+    .create-btn {
+      display: inline-flex;
+      align-items: center;
+      padding: 12px 20px;
+      font-size: 16px;
+      background-color: #45a049;
+      color: white;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: background-color 0.3s, transform 0.3s;
+      text-align: center;
+      line-height: 1;
+      margin-left: 10px;
+    }
+
+    .create-btn span {
+      font-size: 20px;
+      margin-right: 8px;
+    }
+
+    .create-btn:hover {
+      background-color: #388e3c;
+      transform: scale(1.05);
+    }
+
+    .events-list {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin: 2rem auto;
+      gap: 20px;
+      max-width: 1000px;
+    }
+
+    .event-card {
+      background-color: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      width: 250px;
+      padding: 20px;
+      text-align: center;
+      transition: transform 0.3s;
+    }
+
+    .event-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .event-card h3 {
+      margin-bottom: 10px;
+      color: #333;
+    }
+
+    .event-card p {
+      font-size: 14px;
+      color: #666;
+    }
+
+    .event-card .event-date {
+      font-size: 14px;
+      color: #45a049;
+    }
+
+    .event-card img {
+      width: 100%;
+      height: 150px;
+      object-fit: cover;
+      border-radius: 8px;
+      margin-bottom: 10px;
+    }
+
+    .event-card .event-buttons {
+      display: flex;
+      flex-direction: column;
+      margin-top: 10px;
+    }
+
+    .event-card .event-buttons a,
+    .event-card .event-buttons button {
+      display: block;
+      padding: 12px;
+      background-color: #45a049;
+      color: white;
+      border-radius: 8px;
+      text-decoration: none;
+      font-size: 14px;
+      margin-bottom: 10px;
+      text-align: center;
+      cursor: pointer;
+      transition: background-color 0.3s, transform 0.3s;
+    }
+
+    .event-card .event-buttons a:hover,
+    .event-card .event-buttons button:hover {
+      background-color: #388e3c;
+      transform: scale(1.05);
+    }
+
+    .delete-btn {
+      background-color: #d32f2f;
+      font-size: 14px;
+      color: white;
+      padding: 12px;
+      border-radius: 8px;
+      text-align: center;
+      cursor: pointer;
+      border: none;
+      width: 100%;
+      transition: background-color 0.3s, transform 0.3s;
+    }
+
+    .delete-btn:hover {
+      background-color: #b71c1c;
+      transform: scale(1.05);
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <h1>قائمة الفعاليات</h1>
+  </header>
+
+  <div class="create-btn-container">
+    <a href="dashboardorganizer.html" class="create-btn" style="background-color: #1976d2;">
+      🏠 الرئيسية
+    </a>
+    <a href="createevent.html" class="create-btn">
+      <span>+</span> إنشـاء فعالية
+    </a>
+  </div>
+
+  <section class="events-list" id="eventsList"></section>
+
+  <script>
+    if (!localStorage.getItem("events")) {
+      localStorage.setItem("events", JSON.stringify([]));
+    }
+
+    const eventsList = document.getElementById("eventsList");
+
+    function buildEventsList() {
+      const events = JSON.parse(localStorage.getItem("events")) || [];
+      eventsList.innerHTML = '';
+      if (events.length === 0) {
+        eventsList.innerHTML = "<p>لا توجد فعاليات حالياً.</p>";
+        return;
+      }
+      events.forEach((event, index) => {
+        const eventCard = document.createElement("div");
+        eventCard.classList.add("event-card");
+
+        eventCard.innerHTML = `
+            <img src="${event.image}" alt="صورة الفعالية">
+            <h3>${event.title}</h3>
+            <p>${event.description}</p>
+            <p class="event-date">${event.startDate} - ${event.endDate}</p>
+            <p>${event.location}</p>
+            <div class="event-buttons">
+              <a href="#" class="details-btn" onclick="showDetails(${index})">عرض التفاصيل</a>
+              <a href="editevent.html?edit=${index}" class="edit-btn">تعديل الفعالية</a> 
+              <button class="delete-btn" onclick="deleteEvent(${index})">حذف</button>
+            </div>
+          `;
+
+        eventsList.appendChild(eventCard);
+      });
+    }
+
+    function showDetails(index) {
+      window.location.href = `eventDetails.html?index=${index}`;
+    }
+
+    function deleteEvent(index) {
+      if (confirm("هل أنت متأكد أنك تريد حذف هذه الفعالية؟")) {
+        let events = JSON.parse(localStorage.getItem("events")) || [];
+        if (index >= 0 && index < events.length) {
+          events.splice(index, 1); // حذف العنصر باستخدام index
+          localStorage.setItem("events", JSON.stringify(events));
+          alert("تم حذف الفعالية بنجاح!");
+          buildEventsList();
+        } else {
+          alert("فشل الحذف: الأندكس غير صحيح.");
+        }
+      }
+    }
+
+    buildEventsList();
+      localStorage.setItem("userRole", "organizer");
+
+  </script>
+</body>
+
+</html>

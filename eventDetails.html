@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>تفاصيل الفعالية</title>
+    <style>
+      body {
+        font-family: "Tahoma", sans-serif;
+        background-color: #f4f4f4;
+        margin: 0;
+        padding: 0;
+        color: #333;
+      }
+      header {
+        background-color: #0288d1;
+        color: white;
+        padding: 1rem;
+        text-align: center;
+        position: relative;
+      }
+      .container {
+        max-width: 900px;
+        margin: 20px auto;
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+      .share-button-top {
+        position: absolute;
+        top: 15px;
+        left: 15px;
+        background-color: white;
+        color: #0288d1;
+        border: none;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        font-size: 20px;
+        cursor: pointer;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+      }
+      .share-button-top:hover {
+        background-color: #e0f3fc;
+      }
+      .heart-button {
+        position: absolute;
+        top: 15px;
+        left: 70px;
+        background-color: white;
+        color: #0288d1;
+        border: none;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        font-size: 20px;
+        cursor: pointer;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+      }
+      .heart-button.liked {
+        color: red;
+      }
+      .heart-button:hover {
+        background-color: #e0f3fc;
+      }
+      .images {
+        display: block;
+        margin-bottom: 20px;
+      }
+      .images img {
+        width: 100%;
+        height: 400px;
+        object-fit: cover;
+        border-radius: 8px;
+      }
+      .description {
+        margin-top: 20px;
+        line-height: 1.8;
+      }
+      .info-row {
+        margin-top: 10px;
+        font-size: 16px;
+        color: #555;
+      }
+      .info-label {
+        font-weight: bold;
+        color: #0288d1;
+        margin-left: 5px;
+      }
+      .map {
+        margin-top: 20px;
+        height: 350px;
+        border-radius: 8px;
+        overflow: hidden;
+      }
+      iframe {
+        width: 100%;
+        height: 100%;
+        border: 0;
+      }
+      .comments {
+        margin-top: 30px;
+      }
+      .comments h3 {
+        color: #0288d1;
+      }
+      .comments ul {
+        list-style: none;
+        padding: 0;
+      }
+      .comments li {
+        background-color: #f0f0f0;
+        margin: 10px 0;
+        padding: 10px;
+        border-radius: 5px;
+      }
+      .comment-form {
+        display: flex;
+        flex-direction: column;
+        margin-top: 10px;
+      }
+      .comment-form textarea {
+        resize: none;
+        padding: 10px;
+        font-size: 14px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+      }
+      .comment-form button {
+        margin-top: 10px;
+        padding: 10px;
+        background-color: #0288d1;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+      .comment-form button:hover {
+        background-color: #0271a8;
+      }
+      .action-buttons {
+        margin-top: 20px;
+        text-align: center;
+      }
+      .action-buttons a {
+        text-decoration: none;
+        background-color: #0288d1;
+        color: white;
+        padding: 12px 25px;
+        border-radius: 8px;
+        font-size: 16px;
+        display: inline-block;
+        margin: 10px;
+        transition: background-color 0.3s ease;
+      }
+      .action-buttons a:hover {
+        background-color: #0271a8;
+      }
+      .rating-section {
+        margin-top: 30px;
+        text-align: right;
+      }
+      #star-rating {
+        direction: ltr;
+        display: inline-block;
+        margin-top: 10px;
+      }
+      #star-rating .star {
+        font-size: 35px;
+        cursor: pointer;
+        color: #ccc;
+        transition: color 0.2s;
+        display: inline-block;
+      }
+      #star-rating .star.selected {
+        color: gold;
+      }
+      #rating-result {
+        margin-top: 10px;
+        font-weight: bold;
+        color: green;
+      }
+      .price-section {
+        background: linear-gradient(135deg, #0288d1, #26c6da);
+        color: white;
+        padding: 20px;
+        border-radius: 15px;
+        text-align: center;
+        margin: 20px 0;
+        box-shadow: 0 4px 15px rgba(2, 136, 209, 0.2);
+      }
+      .price-section .price-label {
+        font-size: 18px;
+        margin-bottom: 10px;
+        opacity: 0.9;
+      }
+      .price-section .price-amount {
+        font-size: 32px;
+        font-weight: bold;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      }
+      .price-section .currency {
+        font-size: 24px;
+        margin-right: 5px;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1 id="event-title">تفاصيل الفعالية</h1>
+      <button class="share-button-top" onclick="shareActivity()" title="مشاركة الفعالية">
+        📤
+      </button>
+      <button class="heart-button" onclick="toggleLike()" title="إعجاب">
+        🤍
+      </button>
+    </header>
+
+    <div class="container">
+      <div id="images-container" class="images">
+        <!-- الصور ستضاف هنا -->
+      </div>
+
+      <div class="price-section">
+        <div class="price-label">سعر التذكرة</div>
+        <div class="price-amount">
+          <span class="currency">ريال</span>
+          <span id="ticket-price"></span>
+        </div>
+      </div>
+
+      <div class="description" id="description"></div>
+
+      <div class="info-row">
+        <span class="info-label">الموقع:</span>
+        <span id="location"></span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">نوع الفعالية:</span>
+        <span id="event-type"></span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">تاريخ البداية:</span>
+        <span id="start-date"></span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">تاريخ النهاية:</span>
+        <span id="end-date"></span>
+      </div>
+
+      <div class="map" id="map-container">
+        <!-- الخريطة ستضاف هنا -->
+      </div>
+
+      <div class="rating-section">
+        <h3>قيّم هذه الفعالية</h3>
+        <div id="star-rating">
+          <span class="star" data-value="1">★</span>
+          <span class="star" data-value="2">★</span>
+          <span class="star" data-value="3">★</span>
+          <span class="star" data-value="4">★</span>
+          <span class="star" data-value="5">★</span>
+        </div>
+        <p id="rating-result">لم يتم التقييم بعد</p>
+      </div>
+
+      <div class="comments">
+        <h3>التعليقات</h3>
+        <ul id="comments-list"></ul>
+        <div class="comment-form">
+          <textarea id="comment-input" rows="3" placeholder="اكتب تعليقك..."></textarea>
+          <button onclick="addComment()">إرسال</button>
+        </div>
+      </div>
+
+      <div class="action-buttons">
+        <a id="homeLink">الرجوع للصفحة الرئيسية</a>
+        <a href="#" id="book-btn">حجز الآن</a>
+      </div>
+    </div>
+
+   <script>
+      window.onload = function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const eventTitle = urlParams.get('title');
+        
+        if (eventTitle) {
+          // قراءة الفعاليات من localStorage باستخدام المفتاح الصحيح 'events'
+          const events = JSON.parse(localStorage.getItem('events')) || [];
+          // البحث عن الفعالية باستخدام العنوان
+          const event = events.find(e => e.title === eventTitle);
+          
+          if (event) {
+            // حفظ index الفعالية
+            event.index = events.indexOf(event);
+            displayEventDetails(event);
+          } else {
+            showError("لم يتم العثور على الفعالية");
+          }
+        } else {
+          showError("مرجع الفعالية غير صحيح");
+        }
+      };
+
+      function displayEventDetails(event) {
+        const seatsKey = `activity_${event.index}_seats`;
+        const availableSeats = parseInt(localStorage.getItem(seatsKey)) || event.seatsAvailable || 0;
+        
+        document.getElementById('event-title').textContent = event.title;
+        document.getElementById('description').textContent = event.description;
+        document.getElementById('location').textContent = event.location;
+        document.getElementById('event-type').textContent = event.type;
+        document.getElementById('start-date').textContent = event.startDate || 'غير محدد';
+        document.getElementById('end-date').textContent = event.endDate || 'غير محدد';
+        document.getElementById('ticket-price').textContent = event.ticketPrice || '0';
+
+        // تحميل الصور
+        const imagesContainer = document.getElementById('images-container');
+        imagesContainer.innerHTML = '';
+        if (event.image) {
+          const img = document.createElement('img');
+          img.src = event.image;
+          img.alt = event.title;
+          imagesContainer.appendChild(img);
+        }
+
+        // تحديث الخريطة
+        const mapContainer = document.getElementById('map-container');
+        if (event.location) {
+          mapContainer.innerHTML = `
+            <iframe
+              src="https://www.google.com/maps?q=${encodeURIComponent(event.location)}&hl=ar&z=14&output=embed"
+              allowfullscreen=""
+              loading="lazy"
+              referrerpolicy="no-referrer-when-downgrade">
+            </iframe>`;
+        }
+
+        // تحديث زر الحجز
+        const bookBtn = document.getElementById('book-btn');
+        bookBtn.href = `pay.html?title=${encodeURIComponent(event.title)}&price=${event.ticketPrice}&seats=${availableSeats}&index=${event.index}`;
+
+        // تحميل التعليقات الخاصة بالفعالية
+        loadComments(event.index);
+      }
+
+      function loadComments(eventIndex) {
+        const commentsKey = `activity_${eventIndex}_comments`;
+        const comments = JSON.parse(localStorage.getItem(commentsKey)) || [];
+        const commentsList = document.getElementById('comments-list');
+        commentsList.innerHTML = '';
+        
+        if (comments.length === 0) {
+          commentsList.innerHTML = '<li>لا توجد تعليقات حتى الآن</li>';
+        } else {
+          comments.forEach(comment => {
+            const li = document.createElement('li');
+            li.textContent = comment.text;
+            const date = new Date(comment.date);
+            const dateStr = date.toLocaleDateString('ar-SA');
+            const timeStr = date.toLocaleTimeString('ar-SA');
+            const dateSpan = document.createElement('div');
+            dateSpan.style.fontSize = '12px';
+            dateSpan.style.color = '#666';
+            dateSpan.style.marginTop = '5px';
+            dateSpan.textContent = `${dateStr} - ${timeStr}`;
+            li.appendChild(dateSpan);
+            commentsList.appendChild(li);
+          });
+        }
+      }
+
+      function addComment() {
+        const input = document.getElementById('comment-input');
+        const comment = input.value.trim();
+        if (comment) {
+          const urlParams = new URLSearchParams(window.location.search);
+          const eventTitle = urlParams.get('title');
+          const events = JSON.parse(localStorage.getItem('events')) || [];
+          const event = events.find(e => e.title === eventTitle);
+          
+          if (event) {
+            const eventIndex = events.indexOf(event);
+            const commentsKey = `activity_${eventIndex}_comments`;
+            const comments = JSON.parse(localStorage.getItem(commentsKey)) || [];
+            
+            comments.push({
+              text: comment,
+              date: new Date().toISOString()
+            });
+            
+            localStorage.setItem(commentsKey, JSON.stringify(comments));
+            loadComments(eventIndex);
+            input.value = '';
+          }
+        } else {
+          alert('الرجاء كتابة تعليق قبل الإرسال');
+        }
+      }
+
+      function showError(message) {
+        document.getElementById('event-title').textContent = "خطأ";
+        document.querySelector('.container').innerHTML = `<p style="text-align: center; color: red;">${message}</p>`;
+      }
+
+      function shareActivity() {
+        const url = window.location.href;
+        navigator.clipboard.writeText(url);
+        alert("تم نسخ رابط الفعالية! يمكنك مشاركته الآن.");
+      }
+
+      function toggleLike() {
+        const heartButton = document.querySelector(".heart-button");
+        heartButton.classList.toggle("liked");
+        heartButton.textContent = heartButton.classList.contains("liked") ? "❤️" : "🤍";
+      }
+
+      // نظام التقييم
+      let hasRated = false;
+      document.querySelectorAll("#star-rating .star").forEach((star) => {
+        star.addEventListener("click", function () {
+          if (hasRated) {
+            alert("لقد قمت بالتقييم بالفعل.");
+            return;
+          }
+          const ratingValue = parseInt(this.getAttribute("data-value"));
+          document.querySelectorAll("#star-rating .star").forEach((s) => {
+            if (parseInt(s.getAttribute("data-value")) <= ratingValue) {
+              s.classList.add("selected");
+            }
+          });
+          document.getElementById("rating-result").textContent = `تم التقييم: ${ratingValue} من 5 نجوم`;
+          hasRated = true;
+          alert("شكرًا لتقييمك!");
+        });
+      });
+
+      // تحديد الصفحة الرئيسية بناءً على نوع المستخدم
+      const userRole = localStorage.getItem("userRole");
+      const homeLink = document.getElementById("homeLink");
+      homeLink.href = userRole === "organizer" ? "eventlist.html" : "home.html";
+</script>
+  </body>
+</html>

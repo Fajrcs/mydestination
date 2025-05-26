@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>تسجيل الدخول - My Destination</title>
+    <style>
+      body {
+        font-family: "Tahoma", sans-serif;
+        background: linear-gradient(to left, #74ebd5, #acb6e5);
+        margin: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+      }
+
+      .login-container {
+        background-color: white;
+        padding: 2.5rem;
+        border-radius: 15px;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+        width: 380px;
+        text-align: center;
+      }
+
+      h2 {
+        margin-bottom: 1.5rem;
+        color: #333;
+        font-size: 22px;
+      }
+
+      input[type="email"],
+      input[type="password"] {
+        width: 100%;
+        padding: 12px;
+        margin: 10px 0;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+        font-size: 15px;
+        box-sizing: border-box;
+      }
+
+      button {
+        width: 100%;
+        padding: 12px;
+        margin-top: 10px;
+        background-color: #45a049;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        box-sizing: border-box;
+      }
+
+      button:hover {
+        background-color: #387f3d;
+      }
+
+      button:focus {
+        outline: 2px solid #387f3d;
+        outline-offset: 2px;
+      }
+
+      .links {
+        margin-top: 1rem;
+        font-size: 14px;
+      }
+
+      .links a {
+        color: #007bff;
+        text-decoration: none;
+      }
+
+      .links a:hover {
+        text-decoration: underline;
+      }
+
+      .forgot-password {
+        font-size: 14px;
+        margin-top: 10px;
+      }
+
+      .forgot-password a {
+        color: #007bff;
+        text-decoration: none;
+      }
+
+      .forgot-password a:hover {
+        text-decoration: underline;
+      }
+
+      .error-message {
+        color: red;
+        margin-top: 10px;
+        font-size: 14px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="login-container">
+      <h2>تسجيل الدخول</h2>
+      <form id="loginForm">
+        <input
+          type="email"
+          id="email"
+          placeholder="البريد الإلكتروني"
+          required
+        />
+        <input
+          type="password"
+          id="password"
+          placeholder="كلمة المرور"
+          required
+        />
+        <button type="submit">دخول</button>
+        <div class="error-message" id="errorMessage" style="display: none">
+          <p>البريد الإلكتروني أو كلمة المرور غير صحيحة!</p>
+        </div>
+      </form>
+      <div class="links">
+        <p>ليس لديك حساب؟ <a href="regster.html">إنشاء حساب كمستخدم</a></p>
+        <p><a href="forgetpas.html">نسيت كلمة المرور؟</a></p>
+      </div>
+    </div>
+
+    <script>
+      document
+        .getElementById("loginForm")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+
+          const email = document.getElementById("email").value;
+          const password = document.getElementById("password").value;
+
+          const users = JSON.parse(localStorage.getItem("users")) || [];
+
+          const user = users.find(
+            (user) => user.email === email && user.password === password
+          );
+
+          if (user) {
+            const loggedInUser = { ...user, role: "user" };
+            localStorage.setItem("loggedInUser", JSON.stringify(loggedInUser));
+            window.location.href = "home.html";
+          } else {
+            document.getElementById("errorMessage").style.display = "block";
+          }
+        });
+    </script>
+  </body>
+</html>

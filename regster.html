@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>تسجيل جديد - My Destination</title>
+    <style>
+      body {
+        font-family: "Tahoma", sans-serif;
+        background: linear-gradient(to left, #76f0da, #acb6e5);
+        margin: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+      }
+
+      .register-container {
+        background-color: white;
+        padding: 2.5rem;
+        border-radius: 15px;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+        width: 380px;
+        text-align: center;
+      }
+
+      h2 {
+        margin-bottom: 1.5rem;
+        color: #333;
+        font-size: 22px;
+      }
+
+      input[type="text"],
+      input[type="email"],
+      input[type="password"],
+      input[type="tel"] {
+        width: 100%;
+        padding: 12px;
+        margin: 10px 0;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+        font-size: 15px;
+        box-sizing: border-box;
+      }
+
+      button {
+        width: 100%;
+        padding: 12px;
+        margin-top: 10px;
+        background-color: #2196f3;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        box-sizing: border-box;
+      }
+
+      button:hover {
+        background-color: #1976d2;
+      }
+
+      .links {
+        margin-top: 1rem;
+        font-size: 14px;
+      }
+
+      .links a {
+        color: #007bff;
+        text-decoration: none;
+      }
+
+      .links a:hover {
+        text-decoration: underline;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="register-container">
+      <h2>تسجيل جديد</h2>
+      <form id="registerForm">
+        <input
+          type="text"
+          name="fullName"
+          placeholder="الاسم المستخدم 📝"
+          required
+        />
+        <input
+          type="email"
+          name="email"
+          placeholder="البريد الإلكتروني 📧"
+          required
+        />
+        <input type="tel" name="phone" placeholder="رقم الجوال 📱" required />
+        <input
+          type="text"
+          name="nationality"
+          placeholder="الجنسية 🌍"
+          required
+        />
+        <input
+          type="password"
+          name="password"
+          placeholder="كلمة المرور 🔑"
+          required
+        />
+        <input
+          type="password"
+          name="confirmPassword"
+          placeholder="تأكيد كلمة المرور 🔒"
+          required
+        />
+
+        <button type="submit">إنشاء حساب ✅</button>
+      </form>
+      <div class="links">
+        <p>لديك حساب؟ <a href="login.html">تسجيل الدخول 🔑</a></p>
+      </div>
+    </div>
+
+    <script>
+      document
+        .getElementById("registerForm")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+
+          const fullName = e.target.fullName.value;
+          const email = e.target.email.value;
+          const phone = e.target.phone.value;
+          const nationality = e.target.nationality.value;
+          const password = e.target.password.value;
+          const confirmPassword = e.target.confirmPassword.value;
+
+          // التحقق من تطابق كلمة المرور
+          if (password !== confirmPassword) {
+            alert("كلمة المرور غير متطابقة!");
+            return;
+          }
+
+          const newUser = {
+            fullName,
+            email,
+            phone,
+            nationality,
+            password,
+            type: "user",
+          };
+
+          const existingUsers = JSON.parse(localStorage.getItem("users")) || [];
+
+          const isDuplicate = existingUsers.some(
+            (user) => user.email === email
+          );
+          if (isDuplicate) {
+            alert("البريد الإلكتروني مسجل مسبقًا!");
+            return;
+          }
+
+          // إضافة المستخدم الجديد إلى localStorage
+          existingUsers.push(newUser);
+          localStorage.setItem("users", JSON.stringify(existingUsers));
+
+          alert("تم التسجيل بنجاح!");
+          window.location.href = "login.html";
+        });
+    </script>
+  </body>
+</html>

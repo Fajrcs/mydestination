@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>تغيير كلمة المرور</title>
+    <style>
+      body {
+        font-family: "Cairo", sans-serif;
+        margin: 0;
+        padding: 0;
+        background: #f0f8ff;
+        color: #333;
+      }
+
+      header {
+        background-color: #0288d1;
+        padding: 2rem 1rem;
+        text-align: center;
+        color: white;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      }
+
+      header h1 {
+        margin: 0;
+        font-size: 2.5rem;
+        letter-spacing: 1px;
+      }
+
+      .container {
+        max-width: 600px;
+        margin: 40px auto;
+        background: #ffffff;
+        padding: 40px;
+        border-radius: 20px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      }
+
+      .form-group {
+        margin-bottom: 20px;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 8px;
+      }
+
+      .form-group input {
+        width: 100%;
+        padding: 10px;
+        font-size: 1rem;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+      }
+
+      .btn {
+        display: inline-block;
+        margin-top: 15px;
+        background: #0288d1;
+        color: white;
+        border: none;
+        padding: 10px 22px;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background 0.3s ease;
+        font-size: 1rem;
+        width: 100%;
+      }
+
+      .btn:hover {
+        background: #0277bd;
+      }
+
+      /* زر التراجع */
+      #backBtn {
+        background-color: #f44336;
+        margin-top: 10px;
+        padding: 10px 22px;
+        border-radius: 8px;
+        border: none;
+        color: white;
+        cursor: pointer;
+        width: 100%;
+        font-size: 1rem;
+        transition: background 0.3s ease;
+      }
+
+      #backBtn:hover {
+        background-color: #d32f2f;
+      }
+
+      .error-message {
+        color: red;
+        margin-top: 10px;
+        font-size: 14px;
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>تغيير كلمة المرور</h1>
+    </header>
+
+    <div class="container">
+      <form id="change-password-form">
+        <div class="form-group">
+          <label for="currentPassword">كلمة المرور الحالية:</label>
+          <input type="password" id="currentPassword" required />
+        </div>
+
+        <div class="form-group">
+          <label for="newPassword">كلمة المرور الجديدة:</label>
+          <input type="password" id="newPassword" required />
+        </div>
+
+        <div class="form-group">
+          <label for="confirmPassword">تأكيد كلمة المرور الجديدة:</label>
+          <input type="password" id="confirmPassword" required />
+        </div>
+
+        <button type="submit" class="btn">تحديث كلمة المرور</button>
+        <button type="button" id="backBtn">تراجع</button>
+      </form>
+
+      <div class="error-message" id="errorMessage">
+        <p>حدث خطأ في تغيير كلمة المرور. يرجى المحاولة مرة أخرى.</p>
+      </div>
+    </div>
+
+    <script>
+      window.onload = function () {
+        const currentUser = JSON.parse(localStorage.getItem("loggedInUser"));
+        if (!currentUser) {
+          alert("لم يتم العثور على بيانات المستخدم");
+          window.location.href = "firstPage.html";
+        }
+      };
+
+      document
+        .getElementById("change-password-form")
+        .addEventListener("submit", function (event) {
+          event.preventDefault();
+
+          const currentUser = JSON.parse(localStorage.getItem("loggedInUser"));
+          const currentPassword =
+            document.getElementById("currentPassword").value;
+          const newPassword = document.getElementById("newPassword").value;
+          const confirmPassword =
+            document.getElementById("confirmPassword").value;
+
+          if (currentPassword !== currentUser.password) {
+            alert("كلمة المرور الحالية غير صحيحة.");
+            return;
+          }
+
+          if (newPassword !== confirmPassword) {
+            alert("كلمة المرور الجديدة غير متطابقة.");
+            return;
+          }
+
+          currentUser.password = newPassword;
+          localStorage.setItem("loggedInUser", JSON.stringify(currentUser));
+
+          const userType = currentUser.type;
+          if (userType === "user") {
+            let users = JSON.parse(localStorage.getItem("users")) || [];
+            users = users.map((user) => {
+              if (user.email === currentUser.email) {
+                user.password = newPassword;
+              }
+              return user;
+            });
+            localStorage.setItem("users", JSON.stringify(users));
+          } else if (userType === "organizer") {
+            let organizers =
+              JSON.parse(localStorage.getItem("organizers")) || [];
+            organizers = organizers.map((org) => {
+              if (org.email === currentUser.email) {
+                org.password = newPassword;
+              }
+              return org;
+            });
+            localStorage.setItem("organizers", JSON.stringify(organizers));
+          }
+
+          alert("تم تغيير كلمة المرور بنجاح.");
+          window.location.href = "p.html";
+        });
+
+      document.getElementById("backBtn").addEventListener("click", function () {
+        window.history.back();
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>الملف الشخصي</title>
+    <style>
+      body {
+        font-family: "Cairo", sans-serif;
+        margin: 0;
+        padding: 0;
+        background: #f0f8ff;
+        color: #333;
+      }
+
+      header {
+        background-color: #0288d1;
+        padding: 2rem 1rem;
+        text-align: center;
+        color: white;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      }
+
+      header h1 {
+        margin: 0;
+        font-size: 2.5rem;
+        letter-spacing: 1px;
+      }
+
+      .container {
+        max-width: 1000px;
+        margin: 40px auto;
+        background: #ffffff;
+        padding: 40px;
+        border-radius: 20px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      }
+
+      .profile-section {
+        margin-bottom: 40px;
+      }
+
+      h2 {
+        font-size: 2rem;
+        color: #0288d1;
+        border-bottom: 2px solid #0288d1;
+        padding-bottom: 10px;
+        margin-bottom: 25px;
+      }
+
+      .info {
+        font-size: 1.1rem;
+        margin: 10px 0;
+        color: #555;
+      }
+
+      .info strong {
+        color: #01579b;
+      }
+
+      .btn {
+        display: inline-block;
+        margin-top: 15px;
+        background: #0288d1;
+        color: white;
+        border: none;
+        padding: 10px 22px;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background 0.3s ease;
+        font-size: 1rem;
+        margin-right: 10px;
+      }
+
+      .btn:hover {
+        background: #0277bd;
+      }
+
+      .btn-logout {
+        background-color: #d32f2f;
+      }
+
+      .btn-logout:hover {
+        background-color: #b71c1c;
+      }
+
+      .logout {
+        text-align: left;
+      }
+
+      .language-switch {
+        text-align: right;
+        margin-top: 20px;
+      }
+
+      .language-switch button {
+        background-color: #0288d1;
+        color: white;
+        padding: 8px 16px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+      }
+
+      .language-switch button:hover {
+        background-color: #0277bd;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>👤 الملف الشخصي</h1>
+    </header>
+
+    <div class="container">
+      <div class="logout">
+        <button class="btn btn-logout" onclick="logout()">تسجيل الخروج</button>
+      </div>
+
+      <section class="profile-section">
+        <h2>معلومات المنظم</h2>
+        <p class="info" id="labelName">
+          الاسم: <strong id="fullName">جارٍ التحميل...</strong>
+        </p>
+        <p class="info" id="labelEmail">
+          البريد الإلكتروني: <strong id="userEmail">جارٍ التحميل...</strong>
+        </p>
+        <p class="info" id="labelPhone">
+          رقم الجوال: <strong id="userPhone">جارٍ التحميل...</strong>
+        </p>
+        <p class="info" id="labelOrganization">
+          المنظمة: <strong id="userOrganization">جارٍ التحميل...</strong>
+        </p>
+        <p class="info" id="labelUserType">
+          نوع المستخدم: <strong id="userType">جارٍ التحميل...</strong>
+        </p>
+
+        <button class="btn" onclick="window.location.href='ChangePas.html'">
+          تغيير كلمة المرور
+        </button>
+        <button class="btn" onclick="window.location.href='editprofile.html'">
+          تعديل الملف الشخصي
+        </button>
+      </section>
+
+      <div class="language-switch">
+        <button onclick="switchLanguage()">تغيير اللغة إلى الإنجليزية</button>
+      </div>
+    </div>
+
+    <script>
+      function logout() {
+        localStorage.removeItem("loggedInUser");
+        alert("تم تسجيل الخروج");
+        window.location.href = "loginOrganizer.html";
+      }
+
+      function switchLanguage() {
+        const isArabic = document.documentElement.lang === "ar";
+        document.documentElement.lang = isArabic ? "en" : "ar";
+        document.documentElement.dir = isArabic ? "ltr" : "rtl";
+        updateLanguage();
+      }
+
+      function updateLanguage() {
+        const lang = document.documentElement.lang;
+        document.querySelector("header h1").textContent =
+          lang === "en" ? "👤 Profile" : "👤 الملف الشخصي";
+        document.querySelector(".logout .btn").textContent =
+          lang === "en" ? "Log Out" : "تسجيل الخروج";
+        document.querySelector(".profile-section h2").textContent =
+          lang === "en" ? "Organizer Info" : "معلومات المنظم";
+        document.querySelector(".language-switch button").textContent =
+          lang === "en" ? "Switch to Arabic" : "تغيير اللغة إلى الإنجليزية";
+
+        document.getElementById("labelName").childNodes[0].nodeValue =
+          lang === "en" ? "Name: " : "الاسم: ";
+        document.getElementById("labelEmail").childNodes[0].nodeValue =
+          lang === "en" ? "Email: " : "البريد الإلكتروني: ";
+        document.getElementById("labelPhone").childNodes[0].nodeValue =
+          lang === "en" ? "Phone: " : "رقم الجوال: ";
+        document.getElementById("labelOrganization").childNodes[0].nodeValue =
+          lang === "en" ? "Organization: " : "المنظمة: ";
+        document.getElementById("labelUserType").childNodes[0].nodeValue =
+          lang === "en" ? "User Type: " : "نوع المستخدم: ";
+      }
+
+      window.onload = function () {
+        updateLanguage();
+
+        const currentUser = JSON.parse(localStorage.getItem("loggedInUser"));
+        if (currentUser) {
+          document.getElementById("fullName").textContent =
+            currentUser.fullName;
+          document.getElementById("userEmail").textContent = currentUser.email;
+          document.getElementById("userPhone").textContent = currentUser.phone;
+          document.getElementById("userOrganization").textContent =
+            currentUser.organization;
+          document.getElementById("userType").textContent =
+            currentUser.type === "organizer" ? "منظم" : "مستخدم";
+        } else {
+          alert("لم يتم العثور على بيانات المستخدم");
+          window.location.href = "loginOrganizer.html";
+        }
+      };
+    </script>
+  </body>
+</html>

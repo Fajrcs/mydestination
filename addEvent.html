@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إضافة فعالية جديدة - وجهتي</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(to bottom right, #e0f7fa, #f1f8e9);
+            text-align: right;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: #0288d1;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+            font-weight: bold;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 16px;
+            text-align: right;
+        }
+
+        textarea {
+            height: 100px;
+            resize: vertical;
+        }
+
+        button {
+            background: #0288d1;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+        }
+
+        button:hover {
+            background: #015f92;
+        }
+
+        .error {
+            color: red;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>إضافة فعالية جديدة</h1>
+        <form id="addEventForm" onsubmit="addNewEvent(event)">
+            <div class="form-group">
+                <label for="eventTitle">عنوان الفعالية</label>
+                <input type="text" id="eventTitle" required>
+            </div>
+
+            <div class="form-group">
+                <label for="eventDescription">وصف الفعالية</label>
+                <textarea id="eventDescription" required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="eventCity">المدينة</label>
+                <select id="eventCity" required>
+                    <option value="">اختر المدينة</option>
+                    <option value="الرياض">الرياض</option>
+                    <option value="جدة">جدة</option>
+                    <option value="الدمام">الدمام</option>
+                    <option value="العلا">العلا</option>
+                    <option value="الظهران">الظهران</option>
+                    <option value="أبها">أبها</option>
+                    <option value="الطائف">الطائف</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="eventType">نوع الفعالية</label>
+                <select id="eventType" required>
+                    <option value="">اختر نوع الفعالية</option>
+                    <option value="تاريخي">تاريخي</option>
+                    <option value="مؤتمر">مؤتمر</option>
+                    <option value="ورشة عمل">ورشة عمل</option>
+                    <option value="مهرجان">مهرجان</option>
+                    <option value="معرض">معرض</option>
+                    <option value="تعليمي">تعليمي</option>
+                    <option value="ثقافي">ثقافي</option>
+                    <option value="رياضي">رياضي</option>
+                    <option value="فني">فني</option>
+                    <option value="ترفيهي">ترفيهي</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="eventPrice">سعر التذكرة (ريال)</label>
+                <input type="number" id="eventPrice" min="0" required>
+            </div>
+
+            <div class="form-group">
+                <label for="eventImage">رابط الصورة</label>
+                <input type="url" id="eventImage" required>
+            </div>
+
+            <div class="form-group">
+                <label for="eventLocation">الموقع التفصيلي</label>
+                <input type="text" id="eventLocation" required>
+            </div>
+
+            <div class="form-group">
+                <label for="eventSeats">عدد المقاعد المتاحة</label>
+                <input type="number" id="eventSeats" min="1" value="100" required>
+            </div>
+
+            <button type="submit">إضافة الفعالية</button>
+        </form>
+    </div>
+
+    <script>
+        function addNewEvent(event) {
+            event.preventDefault();
+            
+            const title = document.getElementById("eventTitle").value;
+            const description = document.getElementById("eventDescription").value;
+            const city = document.getElementById("eventCity").value;
+            const type = document.getElementById("eventType").value;
+            const price = document.getElementById("eventPrice").value;
+            const image = document.getElementById("eventImage").value;
+            const location = document.getElementById("eventLocation").value;
+            const seats = document.getElementById("eventSeats").value || 100;
+            
+            const newEvent = {
+                title,
+                description,
+                city,
+                type,
+                ticketPrice: parseFloat(price),
+                image,
+                location,
+                seatsAvailable: parseInt(seats)
+            };
+
+            let events = JSON.parse(localStorage.getItem("events")) || [];
+            events.push(newEvent);
+            localStorage.setItem("events", JSON.stringify(events));
+
+            localStorage.setItem(`event_${title}_seats`, seats.toString());
+
+            alert("تم إضافة الفعالية بنجاح!");
+            window.location.href = "home.html";
+        }
+    </script>
+</body>
+</html> 

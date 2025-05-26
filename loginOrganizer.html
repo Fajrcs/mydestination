@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>تسجيل دخول منظم</title>
+    <style>
+      body {
+        font-family: "Tahoma", sans-serif;
+        background: linear-gradient(to left, #76f0da, #acb6e5);
+        margin: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+      }
+
+      .login-container {
+        background-color: white;
+        padding: 2rem;
+        border-radius: 15px;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+        width: 380px;
+        text-align: center;
+      }
+
+      h2 {
+        margin-bottom: 1.5rem;
+        color: #333;
+        font-size: 22px;
+      }
+
+      input[type="email"],
+      input[type="password"] {
+        width: 100%;
+        padding: 12px;
+        margin: 10px 0;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+        font-size: 15px;
+        box-sizing: border-box;
+      }
+
+      button {
+        width: 100%;
+        padding: 12px;
+        margin-top: 10px;
+        background-color: #45a049;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        box-sizing: border-box;
+      }
+
+      button:hover {
+        background-color: #387f3d;
+      }
+
+      button:focus {
+        outline: 2px solid #387f3d;
+        outline-offset: 2px;
+      }
+
+      .links {
+        margin-top: 1rem;
+        font-size: 14px;
+      }
+
+      .links a {
+        color: #007bff;
+        text-decoration: none;
+      }
+
+      .links a:hover {
+        text-decoration: underline;
+      }
+
+      .forgot-password {
+        font-size: 14px;
+        margin-top: 10px;
+      }
+
+      .forgot-password a {
+        color: #007bff;
+        text-decoration: none;
+      }
+
+      .forgot-password a:hover {
+        text-decoration: underline;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="login-container">
+      <h2>تسجيل دخول منظم</h2>
+      <form id="loginForm">
+        <input
+          type="email"
+          name="email"
+          placeholder="البريد الإلكتروني"
+          required
+        />
+        <input
+          type="password"
+          name="password"
+          placeholder="كلمة المرور"
+          required
+        />
+        <button type="submit">تسجيل الدخول</button>
+      </form>
+      <div class="links">
+        <p>
+          ليس لديك حساب؟
+          <a href="regsterOrganizer.html">إنشاء حساب كمنظم</a>
+        </p>
+      </div>
+      <div class="forgot-password">
+        <p><a href="forgetpas.html">نسيت كلمة المرور؟</a></p>
+      </div>
+    </div>
+
+    <script>
+      document
+        .getElementById("loginForm")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+
+          const email = e.target.email.value;
+          const password = e.target.password.value;
+
+          const organizers =
+            JSON.parse(localStorage.getItem("organizers")) || [];
+          localStorage.setItem("isOrganiser", "true"); // عند دخول منظم
+
+          const organizer = organizers.find(
+            (org) => org.email === email && org.password === password
+          );
+
+          if (organizer) {
+            const loggedInUser = { ...organizer, role: "organizer" };
+            localStorage.setItem("loggedInUser", JSON.stringify(loggedInUser));
+            alert("تم تسجيل الدخول بنجاح ✅");
+            window.location.href = "dashboardorganizer.html";
+          } else {
+            alert("بيانات الدخول غير صحيحة أو أنك لست منظمًا.");
+          }
+        });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <title>تعليقات الفعاليات</title>
+    <style>
+      body {
+        font-family: Tahoma, sans-serif;
+        background: linear-gradient(to left, #76f0da, #acb6e5);
+        padding: 20px;
+      }
+
+      h1 {
+        text-align: center;
+        color: #333;
+      }
+
+      .event-card {
+        background-color: white;
+        border-radius: 12px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        margin-bottom: 20px;
+      }
+
+      .event-card h2 {
+        margin: 0 0 10px;
+        color: #1976d2;
+      }
+
+      ul {
+        list-style-type: none;
+        padding: 0;
+      }
+
+      li {
+        background: #f0f0f0;
+        padding: 8px;
+        margin: 5px 0;
+        border-radius: 4px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .delete-btn {
+        background: red;
+        color: white;
+        border: none;
+        padding: 4px 8px;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+
+      .no-comments {
+        font-style: italic;
+        color: #888;
+      }
+
+      .back {
+        display: block;
+        width: fit-content;
+        margin: 20px auto;
+        padding: 10px 20px;
+        background-color: #1976d2;
+        color: white;
+        text-decoration: none;
+        border-radius: 8px;
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>تعليقات الزوار على فعالياتك</h1>
+    <div id="eventsContainer"></div>
+
+    <a href="dashboardorganizer.html" class="back">🔙 العودة للوحة التحكم</a>
+
+    <script>
+      const events = JSON.parse(localStorage.getItem("events")) || [];
+      const container = document.getElementById("eventsContainer");
+
+      if (events.length === 0) {
+        container.innerHTML =
+          "<p style='text-align:center;'>لا توجد فعاليات لعرضها.</p>";
+      } else {
+        events.forEach((event, index) => {
+          const eventBox = document.createElement("div");
+          eventBox.className = "event-card";
+
+          const title = document.createElement("h2");
+          title.textContent = event.title || `فعالية رقم ${index}`;
+          eventBox.appendChild(title);
+
+          const commentsKey = `comments_event_${index}`;
+          let comments = JSON.parse(localStorage.getItem(commentsKey)) || [];
+
+          const commentsList = document.createElement("ul");
+
+          if (comments.length === 0) {
+            const noComments = document.createElement("p");
+            noComments.className = "no-comments";
+            noComments.textContent = "لا توجد تعليقات لهذه الفعالية.";
+            eventBox.appendChild(noComments);
+          } else {
+            comments.forEach((comment, commentIndex) => {
+              const li = document.createElement("li");
+              li.innerHTML = `
+              <span>${comment}</span>
+              <button class="delete-btn">🗑 حذف</button>
+            `;
+
+              li.querySelector(".delete-btn").addEventListener("click", () => {
+                comments.splice(commentIndex, 1);
+                localStorage.setItem(commentsKey, JSON.stringify(comments));
+                window.location.reload(); // أو نعيد عرض الكروت بدون ريفرش
+              });
+
+              commentsList.appendChild(li);
+            });
+
+            eventBox.appendChild(commentsList);
+          }
+
+          container.appendChild(eventBox);
+        });
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="ar">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>إدارة الفعاليات والمشاركين</title>
+    <style>
+      body {
+        font-family: Tahoma, sans-serif;
+        background: linear-gradient(to left, #76f0da, #acb6e5);
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        min-height: 100vh;
+        position: relative;
+      }
+
+      .home-button {
+        position: absolute;
+        top: 10px;
+        right: 20px;
+        z-index: 1000;
+      }
+
+      .home-button a {
+        padding: 10px 16px;
+        background-color: #1976d2;
+        color: white;
+        text-decoration: none;
+        border-radius: 6px;
+        font-size: 16px;
+      }
+
+      .home-button a:hover {
+        background-color: #0d47a1;
+      }
+
+      .container {
+        width: 80%;
+        margin: 60px auto 20px auto;
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        text-align: center;
+      }
+
+      h1 {
+        color: #333;
+      }
+
+      label {
+        font-size: 16px;
+        color: #555;
+      }
+
+      select,
+      input[type="text"],
+      input[type="email"],
+      input[type="tel"],
+      input[type="text"].event-name {
+        margin: 10px 0;
+        padding: 10px;
+        font-size: 16px;
+        width: 100%;
+        box-sizing: border-box;
+        border-radius: 4px;
+        border: 1px solid #ddd;
+        direction: rtl;
+        text-align: right;
+      }
+
+      button {
+        padding: 10px 20px;
+        font-size: 16px;
+        background-color: #4caf50;
+        color: white;
+        border: none;
+        cursor: pointer;
+        margin-top: 10px;
+        border-radius: 4px;
+      }
+
+      button:hover {
+        background-color: #45a049;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+        display: none;
+      }
+
+      table,
+      th,
+      td {
+        border: 1px solid #ddd;
+      }
+
+      th,
+      td {
+        padding: 10px;
+        text-align: center;
+      }
+
+      th {
+        background-color: #f4f4f4;
+      }
+
+      .edit-btn {
+        background-color: #ff9800;
+        color: white;
+        padding: 5px 10px;
+        cursor: pointer;
+        border-radius: 4px;
+      }
+
+      .edit-btn:hover {
+        background-color: #e68900;
+      }
+
+      .participants-count {
+        margin-top: 10px;
+        font-size: 18px;
+        color: #333;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- زر الصفحة الرئيسية -->
+    <div class="home-button">
+      <a href="dashboardorganizer.html">🏠 الصفحة الرئيسية</a>
+    </div>
+
+    <div class="container">
+      <h1>إدارة الفعاليات والمشاركين</h1>
+
+      <!-- إضافة فعالية -->
+      <label for="new-event-name">اسم الفعالية:</label>
+      <input
+        type="text"
+        id="new-event-name"
+        class="event-name"
+        placeholder="اسم الفعالية"
+      />
+      <button onclick="addEvent()">إضافة فعالية</button>
+
+      <!-- اختيار الفعالية والتسجيل -->
+      <label for="event-select">اختر الفعالية:</label>
+      <select id="event-select" onchange="showAttendeeForm()">
+        <option value="">اختر فعالية</option>
+      </select>
+
+      <!-- عرض عدد المشاركين -->
+      <div
+        id="participants-count"
+        class="participants-count"
+        style="display: none"
+      >
+        عدد المشاركين: <span id="count">0</span>
+      </div>
+
+      <!-- نموذج إضافة الحضور -->
+      <div id="attendee-form" style="display: none">
+        <h2>أدخل بيانات الحضور</h2>
+        <label for="name">الاسم:</label>
+        <input type="text" id="name" placeholder="الاسم" />
+
+        <label for="email">البريد الإلكتروني:</label>
+        <input type="email" id="email" placeholder="البريد الإلكتروني" />
+
+        <label for="phone">رقم الهاتف:</label>
+        <input type="tel" id="phone" placeholder="رقم الهاتف" />
+
+        <button onclick="addAttendee()">إضافة الحضور</button>
+      </div>
+
+      <!-- عرض الحضور -->
+      <table id="attendees-table">
+        <thead>
+          <tr>
+            <th>الاسم</th>
+            <th>البريد الإلكتروني</th>
+            <th>الهاتف</th>
+            <th>التعديل</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <script>
+      let eventsData = JSON.parse(localStorage.getItem("eventsData")) || {};
+
+      // تحديث قائمة الفعاليات في قائمة الاختيار
+      function populateEventSelect() {
+        const eventSelect = document.getElementById("event-select");
+        eventSelect.innerHTML = '<option value="">اختر فعالية</option>';
+        Object.keys(eventsData).forEach((eventName) => {
+          const option = document.createElement("option");
+          option.value = eventName;
+          option.textContent = eventName;
+          eventSelect.appendChild(option);
+        });
+      }
+
+      function saveData() {
+        localStorage.setItem("eventsData", JSON.stringify(eventsData));
+      }
+
+      function addEvent() {
+        const eventName = document
+          .getElementById("new-event-name")
+          .value.trim();
+        if (eventName === "") {
+          alert("يرجى إدخال اسم الفعالية.");
+          return;
+        }
+        if (eventsData.hasOwnProperty(eventName)) {
+          alert("هذه الفعالية موجودة بالفعل.");
+          return;
+        }
+        eventsData[eventName] = [];
+        saveData();
+        populateEventSelect();
+        document.getElementById("new-event-name").value = "";
+      }
+
+      function showAttendeeForm() {
+        const eventSelect = document.getElementById("event-select");
+        const attendeeForm = document.getElementById("attendee-form");
+        const attendeesTable = document.getElementById("attendees-table");
+        const participantsCount = document.getElementById("participants-count");
+
+        if (eventSelect.value === "") {
+          attendeeForm.style.display = "none";
+          attendeesTable.style.display = "none";
+          participantsCount.style.display = "none";
+        } else {
+          attendeeForm.style.display = "block";
+          attendeesTable.style.display = "table";
+          participantsCount.style.display = "block";
+          displayAttendees(eventSelect.value);
+        }
+      }
+
+      function addAttendee() {
+        const eventSelect = document.getElementById("event-select").value;
+        const name = document.getElementById("name").value.trim();
+        const email = document.getElementById("email").value.trim();
+        const phone = document.getElementById("phone").value.trim();
+
+        if (!name || !email || !phone) {
+          alert("يرجى ملء جميع الحقول.");
+          return;
+        }
+
+        const existing = eventsData[eventSelect].some(
+          (attendee) =>
+            attendee.name === name &&
+            attendee.email === email &&
+            attendee.phone === phone
+        );
+
+        if (existing) {
+          alert("هذا المشارك مسجل بالفعل في هذه الفعالية.");
+          return;
+        }
+
+        eventsData[eventSelect].push({ name, email, phone });
+        saveData();
+        displayAttendees(eventSelect);
+        document.getElementById("name").value = "";
+        document.getElementById("email").value = "";
+        document.getElementById("phone").value = "";
+      }
+
+      function displayAttendees(event) {
+        const attendeesTable = document.getElementById("attendees-table");
+        const tbody = attendeesTable.querySelector("tbody");
+        const participantsCount = document.getElementById("count");
+        tbody.innerHTML = "";
+
+        eventsData[event].forEach((attendee, index) => {
+          const row = document.createElement("tr");
+          row.innerHTML = `
+            <td>${attendee.name}</td>
+            <td>${attendee.email}</td>
+            <td>${attendee.phone}</td>
+            <td><button class="edit-btn" onclick="editAttendee(${index}, '${event}')">تعديل</button></td>
+          `;
+          tbody.appendChild(row);
+        });
+
+        participantsCount.textContent = eventsData[event].length;
+      }
+
+      function editAttendee(index, event) {
+        const attendee = eventsData[event][index];
+        document.getElementById("name").value = attendee.name;
+        document.getElementById("email").value = attendee.email;
+        document.getElementById("phone").value = attendee.phone;
+        eventsData[event].splice(index, 1);
+        saveData();
+        displayAttendees(event);
+      }
+
+      window.onload = () => {
+        const events = JSON.parse(localStorage.getItem("events")) || [];
+
+        //  تحديث eventsData لكل فعالية إذا ما كانت موجودة
+        events.forEach((event) => {
+          if (event.title && !eventsData.hasOwnProperty(event.title)) {
+            eventsData[event.title] = []; // فعالية جديدة بدون مشاركين
+          }
+        });
+
+        localStorage.setItem("eventsData", JSON.stringify(eventsData));
+
+        populateEventSelect();
+      };
+    </script>
+  </body>
+</html>

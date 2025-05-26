@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>تعديل الفعالية</title>
+    <style>
+      body {
+        font-family: Tahoma, sans-serif;
+        background: linear-gradient(to left, #76f0da, #acb6e5);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+      }
+
+      .form-container {
+        background-color: white;
+        padding: 2rem;
+        border-radius: 15px;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+        width: 400px;
+      }
+
+      h2 {
+        text-align: center;
+        margin-bottom: 1.5rem;
+        color: #333;
+      }
+
+      input,
+      textarea,
+      select {
+        width: 100%;
+        padding: 12px;
+        margin: 10px 0;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+        box-sizing: border-box;
+        font-size: 15px;
+      }
+
+      button {
+        width: 100%;
+        padding: 12px;
+        background-color: #45a049;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        cursor: pointer;
+        margin-top: 10px;
+      }
+
+      button:hover {
+        background-color: #388e3c;
+      }
+
+      /* زر التراجع */
+      #cancelButton {
+        background-color: #e74c3c;
+      }
+
+      #cancelButton:hover {
+        background-color: #c0392b;
+      }
+
+      .note {
+        font-size: 12px;
+        color: #777;
+        text-align: center;
+      }
+
+      .form-instructions {
+        font-size: 14px;
+        color: #555;
+        margin-bottom: 15px;
+      }
+      .inline-inputs {
+        display: flex;
+        gap: 10px;
+        justify-content: space-between;
+      }
+
+      .inline-inputs input {
+        flex: 1;
+        padding: 12px;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+        font-size: 15px;
+        box-sizing: border-box;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="form-container">
+      <h2>تعديل الفعالية</h2>
+      <form id="editEventForm">
+        <input
+          type="text"
+          id="eventTitle"
+          placeholder="عنوان الفعالية"
+          required
+        />
+        <textarea
+          id="eventDescription"
+          placeholder="وصف الفعالية"
+          rows="4"
+          required
+        ></textarea>
+
+        <label for="eventStartDate" class="form-instructions">
+          يرجى تحديد تاريخ بداية الفعالية
+        </label>
+        <input
+          type="date"
+          id="eventStartDate"
+          required
+          placeholder="تاريخ بداية الفعالية"
+        />
+
+        <label for="eventEndDate" class="form-instructions">
+          يرجى تحديد تاريخ نهاية الفعالية
+        </label>
+        <input
+          type="date"
+          id="eventEndDate"
+          required
+          placeholder="تاريخ نهاية الفعالية"
+        />
+
+        <input
+          type="text"
+          id="eventLocation"
+          placeholder="الموقع أو المدينة"
+          required
+        />
+        <select id="eventType" required>
+          <option value="">نوع الفعالية</option>
+          <option value="مؤتمر">مؤتمر</option>
+          <option value="ورشة عمل">ورشة عمل</option>
+          <option value="مهرجان">مهرجان</option>
+          <option value="معرض">معرض</option>
+          <option value="تعليمي">تعليمي</option>
+          <option value="ثقافي">ثقافي</option>
+          <option value="رياضي">رياضي</option>
+          <option value="فني">فني</option>
+          <option value="ترفيهي">ترفيهي</option>
+        </select>
+
+        <!-- حقول سعر التذكرة وعدد التذاكر الجديدة -->
+        <label class="form-instructions">تفاصيل التذاكر</label>
+        <div class="inline-inputs">
+          <input
+            type="number"
+            id="ticketPrice"
+            placeholder="سعر التذكرة"
+            min="0"
+            required
+          />
+          <input
+            type="number"
+            id="seatsAvailable"
+            placeholder="عدد المقاعد"
+            min="1"
+            required
+          />
+        </div>
+
+        <label for="eventImage" class="form-instructions"
+          >رفع صورة الفعالية</label
+        >
+        <input type="file" id="eventImage" accept="image/*" />
+        <button type="submit">تحديث الفعالية</button>
+        <button type="button" id="cancelButton">تراجع</button>
+        <div class="note">
+          <p>يرجى التأكد من أن تاريخ النهاية أكبر من تاريخ البداية.</p>
+        </div>
+      </form>
+    </div>
+
+    <script>
+      const urlParams = new URLSearchParams(window.location.search);
+      const eventIndex = urlParams.get("edit");
+
+      if (eventIndex === null) {
+        alert("الفعالية غير موجودة.");
+        window.location.href = "eventlist.html";
+      } else {
+        const events = JSON.parse(localStorage.getItem("events")) || [];
+
+        if (eventIndex < 0 || eventIndex >= events.length) {
+          alert("الفعالية غير موجودة.");
+          window.location.href = "eventlist.html";
+        } else {
+          const event = events[eventIndex];
+          let oldImage = event.image;
+
+          document.getElementById("eventTitle").value = event.title;
+          document.getElementById("eventDescription").value = event.description;
+          document.getElementById("eventStartDate").value = event.startDate;
+          document.getElementById("eventEndDate").value = event.endDate;
+          document.getElementById("eventLocation").value = event.location;
+          document.getElementById("eventType").value = event.type;
+
+          // عرض قيم سعر التذكرة وعدد المقاعد
+          document.getElementById("ticketPrice").value =
+            event.ticketPrice || "";
+          document.getElementById("seatsAvailable").value = event.seatsAvailable || "";
+
+          document
+            .getElementById("cancelButton")
+            .addEventListener("click", () => {
+              window.location.href = "eventlist.html";
+            });
+
+          document
+            .getElementById("editEventForm")
+            .addEventListener("submit", function (e) {
+              e.preventDefault();
+
+              const ticketPriceValue = parseFloat(
+                document.getElementById("ticketPrice").value
+              );
+              const seatsValue = parseInt(
+                document.getElementById("seatsAvailable").value
+              );
+
+              if (
+                !document.getElementById("eventTitle").value ||
+                !document.getElementById("eventDescription").value ||
+                !document.getElementById("eventStartDate").value ||
+                !document.getElementById("eventEndDate").value ||
+                !document.getElementById("eventLocation").value ||
+                !document.getElementById("eventType").value ||
+                isNaN(ticketPriceValue) ||
+                isNaN(seatsValue)
+              ) {
+                alert("يرجى ملء جميع الحقول بشكل صحيح.");
+                return;
+              }
+
+              if (ticketPriceValue < 0) {
+                alert("سعر التذكرة لا يمكن أن يكون سالبًا.");
+                return;
+              }
+
+              if (seatsValue < 1 || !Number.isInteger(seatsValue)) {
+                alert("عدد المقاعد يجب أن يكون رقمًا صحيحًا أكبر من صفر.");
+                return;
+              }
+
+              if (
+                document.getElementById("eventEndDate").value <
+                document.getElementById("eventStartDate").value
+              ) {
+                alert("تاريخ نهاية الفعالية يجب أن يكون بعد تاريخ البداية.");
+                return;
+              }
+
+              const updatedEvent = {
+                title: document.getElementById("eventTitle").value,
+                description: document.getElementById("eventDescription").value,
+                startDate: document.getElementById("eventStartDate").value,
+                endDate: document.getElementById("eventEndDate").value,
+                location: document.getElementById("eventLocation").value,
+                type: document.getElementById("eventType").value,
+                ticketPrice: ticketPriceValue,
+                seatsAvailable: seatsValue,
+                image: oldImage, // الصورة القديمة
+              };
+
+              const newImageFile =
+                document.getElementById("eventImage").files[0];
+
+              if (newImageFile) {
+                const reader = new FileReader();
+                reader.onload = function () {
+                  updatedEvent.image = reader.result;
+                  saveUpdatedEvent();
+                };
+                reader.readAsDataURL(newImageFile);
+              } else {
+                saveUpdatedEvent();
+              }
+
+              function saveUpdatedEvent() {
+                events[eventIndex] = updatedEvent;
+                localStorage.setItem("events", JSON.stringify(events));
+                alert("تم تحديث الفعالية بنجاح!");
+                window.location.href = "eventlist.html";
+              }
+            });
+        }
+      }
+    </script>
+  </body>
+</html>

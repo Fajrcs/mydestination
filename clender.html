@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>تقويم الأنشطة السياحية</title>
+  <link href='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/main.min.css' rel='stylesheet'>
+  <style>
+    body {
+      font-family: 'Tahoma', sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+      direction: rtl;
+    }
+    header {
+      background-color: #0288d1;
+      color: white;
+      text-align: center;
+      padding: 20px 0;
+      font-size: 24px;
+    }
+    #calendar {
+      max-width: 1000px;
+      margin: 40px auto;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    .fc .fc-toolbar-title {
+      font-size: 1.4rem;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    تقويم الأنشطة السياحية
+  </header>
+  <div id='calendar'></div>
+
+  <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/main.min.js'></script>
+  <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/locales/ar.js'></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var calendarEl = document.getElementById('calendar');
+      var calendar = new FullCalendar.Calendar(calendarEl, {
+        locale: 'ar',
+        initialView: 'dayGridMonth',
+        headerToolbar: {
+          start: 'today prev,next',
+          center: 'title',
+          end: 'dayGridMonth,timeGridWeek,listWeek'
+        },
+        events: [
+          {
+            title: 'زيارة إلى مركز إثراء',
+            start: '2025-05-12',
+            description: 'فعالية ثقافية في مركز الملك عبدالعزيز الثقافي العالمي',
+            url: 'ethra.html'
+          },
+          {
+            title: 'مهرجان ألوان الشرقية',
+            start: '2025-05-18',
+            description: 'فعالية ترفيهية وعائلية في كورنيش الخبر',
+            url: 'festival.html'
+          },
+          {
+            title: 'جولة في متحف مدينة الدمام',
+            start: '2025-05-22',
+            description: 'جولة معرفية وتاريخية لمتحف الدمام',
+            url: 'museum.html'
+          },
+          {
+            title: 'فعالية الفلك والنجوم',
+            start: '2025-05-27T18:00:00',
+            description: 'ليلة فلكية لمراقبة النجوم باستخدام التلسكوبات',
+            url: 'astronomy.html'
+          }
+        ],
+        eventClick: function(info) {
+          info.jsEvent.preventDefault();
+          if (info.event.url) {
+            window.location.href = info.event.url;
+          }
+        },
+        eventDidMount: function(info) {
+          if (info.event.extendedProps.description) {
+            var tooltip = document.createElement('div');
+            tooltip.innerText = info.event.extendedProps.description;
+            tooltip.style.position = 'absolute';
+            tooltip.style.background = 'white';
+            tooltip.style.border = '1px solid #ccc';
+            tooltip.style.padding = '5px';
+            tooltip.style.borderRadius = '5px';
+            tooltip.style.display = 'none';
+            tooltip.style.fontSize = '12px';
+            tooltip.style.zIndex = '1000';
+            document.body.appendChild(tooltip);
+
+            info.el.addEventListener('mouseover', function (e) {
+              tooltip.style.display = 'block';
+              tooltip.style.top = e.pageY + 'px';
+              tooltip.style.left = e.pageX + 'px';
+            });
+            info.el.addEventListener('mouseout', function () {
+              tooltip.style.display = 'none';
+            });
+          }
+        }
+      });
+      calendar.render();
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,1057 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>الرئيسية - وجهتي</title>
+    <style>
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        margin: 0;
+        background: linear-gradient(to bottom right, #e0f7fa, #f1f8e9);
+        text-align: right;
+      }
+      header,
+      footer {
+        background: #0288d1;
+        color: white;
+        text-align: center;
+        padding: 1rem;
+        font-size: 20px;
+        font-weight: bold;
+      }
+      .top-bar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.5rem 1rem;
+        background-color: #fff;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      .top-bar .icons button {
+        background: none;
+        border: none;
+        font-size: 18px;
+        margin-left: 0;
+        margin-right: 10px;
+        cursor: pointer;
+        color: #0288d1;
+        padding: 8px 15px;
+        border-radius: 5px;
+        transition: all 0.3s ease;
+      }
+      .top-bar .icons button:hover {
+        background: rgba(2, 136, 209, 0.1);
+      }
+      .search-bar {
+        display: flex;
+        justify-content: center;
+        padding: 1rem;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+      .search-bar input,
+      .search-bar select {
+        padding: 0.6rem;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        font-size: 16px;
+      }
+      .search-bar input {
+        width: 60%;
+      }
+      .categories {
+        display: flex;
+        justify-content: center;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+        padding: 1rem;
+      }
+      .categories button {
+        padding: 0.5rem 1rem;
+        border: none;
+        background: #cfd8dc;
+        border-radius: 20px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: background 0.3s;
+      }
+      .categories button.active,
+      .categories button:hover {
+        background: #0288d1;
+        color: white;
+      }
+      #eventsContainer {
+        padding: 0 1rem;
+      }
+      .event-card {
+        background: white;
+        padding: 1rem;
+        margin: 1rem auto;
+        border-radius: 15px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        max-width: 800px;
+        text-align: right;
+        direction: rtl;
+      }
+      .event-card img {
+        width: 100%;
+        border-radius: 10px;
+        height: 200px;
+        object-fit: cover;
+      }
+      .event-card h3 {
+        margin: 0.5rem 0;
+        color: #0288d1;
+      }
+      .event-card p {
+        margin: 0.5rem 0;
+        color: #555;
+      }
+      .event-card .tag {
+        display: inline-block;
+        background: #0288d1;
+        color: white;
+        padding: 0.2rem 0.6rem;
+        border-radius: 10px;
+        font-size: 12px;
+        margin-top: 0.5rem;
+        margin-left: 5px;
+        margin-right: 0;
+      }
+      .event-card .btn-details,
+      .event-card .btn-book {
+        margin-top: 0.5rem;
+        background: #0288d1;
+        color: white;
+        padding: 0.4rem 1rem;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        margin-right: 10px;
+      }
+      .event-card .btn-favorite {
+        margin-top: 0.5rem;
+        background: none;
+        border: none;
+        font-size: 25px;
+        cursor: pointer;
+        color: #0288d1;
+      }
+      .event-card .btn-favorite.active {
+        color: red;
+      }
+      
+      /* Chat Bot Styles */
+      .chat-bot-button {
+        position: fixed;
+        bottom: 20px;
+        left: 20px;
+        width: 65px;
+        height: 65px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #0288d1, #26c6da);
+        color: white;
+        border: none;
+        cursor: pointer;
+        box-shadow: 0 4px 12px rgba(2, 136, 209, 0.4);
+        z-index: 1000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 28px;
+      }
+
+      .chat-bot-button:hover {
+        transform: scale(1.1);
+        box-shadow: 0 6px 16px rgba(2, 136, 209, 0.5);
+      }
+
+      .chat-bot-icon {
+        width: 35px;
+        height: 35px;
+      }
+
+      .chat-container {
+        display: none;
+        position: fixed;
+        bottom: 90px;
+        left: 20px;
+        width: 300px;
+        height: 400px;
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        z-index: 1000;
+        overflow: hidden;
+        flex-direction: column;
+      }
+
+      .chat-header {
+        background: #0288d1;
+        color: white;
+        padding: 15px;
+        font-weight: bold;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .chat-close {
+        background: none;
+        border: none;
+        color: white;
+        font-size: 20px;
+        cursor: pointer;
+      }
+
+      .chat-messages {
+        flex-grow: 1;
+        padding: 15px;
+        overflow-y: auto;
+      }
+
+      .message {
+        margin-bottom: 10px;
+        padding: 8px 12px;
+        border-radius: 15px;
+        max-width: 80%;
+      }
+
+      .user-message {
+        background: #e3f2fd;
+        margin-right: auto;
+        margin-left: 0;
+        border-bottom-left-radius: 5px;
+        border-bottom-right-radius: 15px;
+      }
+
+      .bot-message {
+        background: #f5f5f5;
+        margin-left: auto;
+        margin-right: 0;
+        border-bottom-right-radius: 5px;
+        border-bottom-left-radius: 15px;
+      }
+
+      .chat-input-container {
+        padding: 15px;
+        border-top: 1px solid #eee;
+        display: flex;
+        gap: 10px;
+      }
+
+      .chat-input {
+        flex-grow: 1;
+        padding: 8px;
+        border: 1px solid #ddd;
+        border-radius: 20px;
+        outline: none;
+      }
+
+      .chat-send {
+        background: #0288d1;
+        color: white;
+        border: none;
+        padding: 8px 15px;
+        border-radius: 20px;
+        cursor: pointer;
+      }
+
+      .event-footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: 15px;
+        padding-top: 15px;
+        border-top: 1px solid #eee;
+      }
+
+      .event-details {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+      }
+
+      .seats-info {
+        background: #e3f2fd;
+        padding: 8px 15px;
+        border-radius: 20px;
+        color: #0288d1;
+        font-size: 14px;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
+
+      .seats-info i {
+        font-size: 16px;
+      }
+
+      .book-now {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background: #0288d1;
+        color: white;
+        border: none;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+      }
+
+      .book-now:hover {
+        transform: scale(1.05);
+        background: #015f92;
+      }
+
+      .book-now:disabled {
+        background: #ccc;
+        cursor: not-allowed;
+        transform: none;
+      }
+
+      .price-tag {
+        font-size: 18px;
+        font-weight: bold;
+        color: #0288d1;
+      }
+    </style>
+  </head>
+  <body>
+    <header>وجهتي - الصفحة الرئيسية</header>
+
+    <div class="top-bar">
+      <div class="logo">
+        <h1>وجهتي</h1>
+      </div>
+      <div class="icons">
+        <button onclick="location.href='profile.html'">👤 الملف الشخصي</button>
+        <button onclick="location.href='myTicket.html'">🎟️ تذاكري</button>
+      </div>
+    </div>
+
+    <div class="search-bar">
+      <input
+        type="text"
+        id="searchInput"
+        placeholder="ابحث عن فعاليات أو وجهات..."
+      />
+      <select id="cityFilter">
+        <option value="all">كل المدن</option>
+        <option value="riyadh">الرياض</option>
+        <option value="jeddah">جدة</option>
+        <option value="dammam">الدمام</option>
+        <option value="makkah">مكة</option>
+        <option value="madinah">المدينة</option>
+        <option value="dhahran">الظهران</option>
+        <option value="alula">العلا</option>
+      </select>
+    </div>
+
+    <div class="categories">
+      <button class="active" data-type="all">الكل</button>
+      <button data-type="تاريخي">تاريخي</button>
+      <button data-type="مؤتمر">مؤتمر</button>
+      <button data-type="ورشة عمل">ورشة عمل</button>
+      <button data-type="مهرجان">مهرجان</button>
+      <button data-type="معرض">معرض</button>
+      <button data-type="تعليمي">تعليمي</button>
+      <button data-type="ثقافي">ثقافي</button>
+      <button data-type="رياضي">رياضي</button>
+      <button data-type="فني">فني</button>
+      <button data-type="ترفيهي">ترفيهي</button>
+    </div>
+
+    <div id="eventsContainer"></div>
+
+    <!-- Chat Bot Button -->
+    <button class="chat-bot-button" onclick="toggleChat()">
+      <svg class="chat-bot-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 2C6.48 2 2 6.48 2 12C2 14.4 2.94 16.63 4.5 18.32L2.89 21.83L6.4 20.22C8.09 21.34 9.97 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM13 17H11V15H13V17ZM13 13H11V7H13V13Z" fill="white"/>
+      </svg>
+    </button>
+
+    <!-- Chat Container -->
+    <div class="chat-container" id="chatContainer">
+      <div class="chat-header">
+        خدمة العملاء
+        <button class="chat-close" onclick="toggleChat()">×</button>
+      </div>
+      <div class="chat-messages" id="chatMessages">
+        <div class="message bot-message">مرحباً! كيف يمكنني مساعدتك اليوم؟</div>
+      </div>
+      <div class="chat-input-container">
+        <input type="text" class="chat-input" id="chatInput" placeholder="اكتب رسالتك هنا..." onkeypress="handleKeyPress(event)">
+        <button class="chat-send" onclick="sendMessage()">إرسال</button>
+      </div>
+    </div>
+
+    <script>
+      const defaultEvents = [
+        {
+          type: "تاريخي",
+          city: "الرياض",
+          image: "dr.jpeg",
+          title: "جولة في الدرعية التاريخية",
+          description: "اكتشف تاريخ وعراقة الدرعية التاريخية، مهد الدولة السعودية الأولى. استمتع بجولة شاملة في المواقع التاريخية والمتاحف التراثية، وتعرف على القصص الملهمة وراء تأسيس المملكة العربية السعودية.",
+          detailsPage: "daraya.html",
+          ticketPrice: 150,
+          location: "حي الطريف، الدرعية التاريخية",
+          seatsAvailable: 50
+        },
+        {
+          type: "ثقافي",
+          city: "الظهران",
+          image: "th.jpg",
+          title: "تجربة إثراء الثقافية",
+          description: "استمتع برحلة ثقافية غنية في مركز الملك عبدالعزيز الثقافي العالمي (إثراء). اكتشف المعارض الفنية، المتحف، المكتبة الضخمة، وشارك في ورش العمل والفعاليات الثقافية المتنوعة.",
+          detailsPage: "ethra.html",
+          ticketPrice: 75,
+          location: "مركز الملك عبدالعزيز الثقافي العالمي (إثراء)، الظهران",
+          seatsAvailable: 50
+        },
+        {
+          type: "ترفيهي",
+          city: "العلا",
+          image: "al.jpg",
+          title: "مغامرات العلا الصحراوية",
+          description: "عش تجربة فريدة في قلب صحراء العلا الخلابة. استمتع بركوب المنطاد، سفاري الصحراء، زيارة المواقع الأثرية، والتخييم تحت النجوم في أجواء ساحرة.",
+          detailsPage: "alola.html",
+          ticketPrice: 350,
+          location: "محافظة العلا، المنطقة التاريخية",
+          seatsAvailable: 50
+        },
+        {
+          type: "ترفيهي",
+          city: "الرياض",
+          image: "tr.jpg",
+          title: "موسم الرياض - عالم من الترفيه",
+          description: "استمتع بأضخم موسم ترفيهي في المملكة! عروض عالمية، حفلات موسيقية، مهرجانات طعام، ألعاب وأنشطة للعائلة، وفعاليات ترفيهية متنوعة تناسب جميع الأعمار.",
+          detailsPage: "riyadh-season.html",
+          ticketPrice: 120,
+          location: "بوليفارد رياض سيتي، الرياض",
+          seatsAvailable: 50
+        }
+      ];
+
+      let currentFilter = 'all';
+      let currentSearch = '';
+      let currentCity = 'all';
+
+      window.onload = function() {
+        try {
+          // تحويل الفعاليات الموجودة إلى العربية
+          convertExistingEventsToArabic();
+          
+          initializeDefaultEvents();
+          initializeCityFilter();
+          searchEvents();
+          setTimeout(updateFavoriteButtons, 100);
+        } catch (error) {
+          console.error("خطأ في تحميل الصفحة:", error);
+        }
+      };
+
+      // دالة لتحويل الفعاليات الإنجليزية إلى العربية
+      function convertExistingEventsToArabic() {
+        let events = JSON.parse(localStorage.getItem("events")) || [];
+        let hasChanges = false;
+
+        // قاموس الترجمة للكلمات الشائعة
+        const translations = {
+          // المدن
+          "Riyadh": "الرياض",
+          "Jeddah": "جدة",
+          "Dammam": "الدمام",
+          "Makkah": "مكة",
+          "Madinah": "المدينة",
+          "Dhahran": "الظهران",
+          "AlUla": "العلا",
+
+          // أنواع الفعاليات
+          "Historical": "تاريخي",
+          "Conference": "مؤتمر",
+          "Workshop": "ورشة عمل",
+          "Festival": "مهرجان",
+          "Exhibition": "معرض",
+          "Educational": "تعليمي",
+          "Cultural": "ثقافي",
+          "Sports": "رياضي",
+          "Art": "فني",
+          "Entertainment": "ترفيهي",
+
+          // الفعاليات المحددة
+          "Winter Wonderland": "عجائب الشتاء",
+          "Tech Conference": "مؤتمر التقنية",
+          "Spring Festival": "مهرجان الربيع",
+          "Cultural Night": "الليلة الثقافية",
+          "Tech Summit": "قمة التقنية",
+          "Spring Celebration": "احتفالية الربيع"
+        };
+
+        events = events.map(event => {
+          // التحقق من وجود نص إنجليزي
+          if (!isArabicText(event.title) || !isArabicText(event.description) || !isArabicText(event.location)) {
+            hasChanges = true;
+            
+            // ترجمة العنوان إذا كان موجوداً في قاموس الترجمة
+            if (translations[event.title]) {
+              event.title = translations[event.title];
+            } else if (!isArabicText(event.title)) {
+              event.title = `فعالية ${translations[event.type] || 'متنوعة'} في ${translations[event.city] || event.city}`;
+            }
+
+            // ترجمة الموقع
+            if (translations[event.city]) {
+              event.city = translations[event.city];
+            }
+
+            // ترجمة النوع
+            if (translations[event.type]) {
+              event.type = translations[event.type];
+            }
+
+            // إضافة وصف عربي
+            if (!isArabicText(event.description)) {
+              let arabicDescription = `فعالية ${event.type} مميزة في ${event.city}. `;
+              switch(event.type) {
+                case "تاريخي":
+                  arabicDescription += "اكتشف التاريخ والتراث في رحلة ممتعة ومفيدة.";
+                  break;
+                case "مؤتمر":
+                  arabicDescription += "انضم إلى نخبة من المتحدثين والخبراء في مجالهم.";
+                  break;
+                case "ورشة عمل":
+                  arabicDescription += "تعلم مهارات جديدة وشارك في تجربة تعليمية فريدة.";
+                  break;
+                case "مهرجان":
+                  arabicDescription += "استمتع بأجواء احتفالية مميزة مع عروض وفعاليات متنوعة.";
+                  break;
+                case "معرض":
+                  arabicDescription += "شاهد أحدث العروض والابتكارات في مجال متخصص.";
+                  break;
+                case "تعليمي":
+                  arabicDescription += "فرصة للتعلم والتطور في بيئة تفاعلية محفزة.";
+                  break;
+                case "ثقافي":
+                  arabicDescription += "تعرف على الثقافة والفنون في تجربة غنية ومتنوعة.";
+                  break;
+                case "رياضي":
+                  arabicDescription += "شارك في الأنشطة الرياضية والفعاليات التنافسية.";
+                  break;
+                case "فني":
+                  arabicDescription += "استمتع بعروض فنية مميزة وإبداعات متنوعة.";
+                  break;
+                case "ترفيهي":
+                  arabicDescription += "قضاء أوقات ممتعة مع فعاليات ترفيهية لجميع أفراد العائلة.";
+                  break;
+                default:
+                  arabicDescription += "فعالية مميزة تناسب جميع الأعمار والاهتمامات.";
+              }
+              event.description = arabicDescription;
+            }
+
+            // ترجمة الموقع
+            if (!isArabicText(event.location)) {
+              event.location = `${event.city} - ${translations[event.type] || 'قاعة الفعاليات'} الرئيسية`;
+            }
+          }
+          return event;
+        });
+
+        // حفظ التغييرات إذا تم تعديل أي فعالية
+        if (hasChanges) {
+          localStorage.setItem("events", JSON.stringify(events));
+        }
+      }
+
+     function initializeDefaultEvents() {
+    defaultEvents.forEach(event => {
+        const storageKey = `event_${event.title}`;
+        if (!localStorage.getItem(storageKey)) {
+            localStorage.setItem(storageKey, JSON.stringify({
+                ...event,
+                isDefault: true
+            }));
+            
+            // تخزين عدد المقاعد المتاحة
+            const seatsKey = `${storageKey}_seats`;
+            if (!localStorage.getItem(seatsKey)) {
+                localStorage.setItem(seatsKey, event.seatsAvailable.toString());
+            }
+        }
+    });
+}
+
+      function getAllEvents() {
+        // جلب الفعاليات الافتراضية
+        const events = defaultEvents.map(event => ({
+          ...event,
+          isDefault: true
+        }));
+        
+        // جلب الفعاليات المضافة من المنظم
+        let customEvents = JSON.parse(localStorage.getItem("events")) || [];
+        
+        // التأكد من أن كل فعالية لديها نوع وموقع صحيحين
+        customEvents = customEvents.map(event => {
+          return {
+            ...event,
+            type: event.type || 'متنوعة',
+            city: event.location || 'أخرى',
+            isDefault: false,
+            // إضافة الحقول المطلوبة إذا لم تكن موجودة
+            ticketPrice: event.ticketPrice || 0,
+            seatsAvailable: event.seatsAvailable || 0,
+            image: event.image || 'default.jpg'
+          };
+        });
+
+        // دمج جميع الفعاليات
+        return [...events, ...customEvents];
+      }
+
+      function initializeCityFilter() {
+        const cityFilter = document.getElementById('cityFilter');
+        const cities = new Set();
+        
+        // جمع المدن من الفعاليات الافتراضية
+        defaultEvents.forEach(event => {
+          if (event.city) cities.add(event.city);
+        });
+        
+        // جمع المدن من الفعاليات المضافة
+        const customEvents = JSON.parse(localStorage.getItem("events")) || [];
+        customEvents.forEach(event => {
+          if (event.location) cities.add(event.location);
+        });
+
+        cityFilter.innerHTML = '<option value="all">كل المدن</option>';
+        Array.from(cities).sort().forEach(city => {
+          const option = document.createElement('option');
+          option.value = city;
+          option.textContent = city;
+          cityFilter.appendChild(option);
+        });
+      }
+
+      function filterEvents(type, button) {
+        currentFilter = type;
+        
+        // تحديث حالة الأزرار
+        document.querySelectorAll('.categories button').forEach(btn => {
+          btn.classList.remove('active');
+        });
+        button.classList.add('active');
+        
+        // تحديث عرض الفعاليات
+        searchEvents();
+      }
+
+      function searchEvents() {
+        currentSearch = document.getElementById('searchInput').value.trim().toLowerCase();
+        currentCity = document.getElementById('cityFilter').value;
+        
+        const container = document.getElementById("eventsContainer");
+        container.innerHTML = "";
+
+        // جمع كل الفعاليات
+        const allEvents = getAllEvents();
+        
+        const filteredEvents = allEvents.filter(event => {
+          // تحويل النوع إلى حروف صغيرة للمقارنة
+          const eventType = (event.type || 'متنوعة').toLowerCase();
+          const filterType = currentFilter.toLowerCase();
+          
+          // مطابقة النوع - تحقق من النوع للفعاليات الافتراضية والمضافة
+          let matchesType;
+          if (currentFilter === 'all') {
+            matchesType = true;
+          } else {
+            // تحويل النوع إلى حروف صغيرة للمقارنة
+            const normalizedEventType = eventType.trim().toLowerCase();
+            const normalizedFilterType = filterType.trim().toLowerCase();
+            matchesType = normalizedEventType === normalizedFilterType;
+          }
+          
+          // مطابقة المدينة
+          const eventCity = event.isDefault ? event.city : event.location;
+          const matchesCity = currentCity === 'all' || eventCity === currentCity;
+          
+          // البحث في كل البيانات
+          const searchableText = `${event.title} ${event.description} ${eventCity} ${event.type}`.toLowerCase();
+          const matchesSearch = searchableText.includes(currentSearch);
+          
+          // للتأكد من صحة التصنيف
+          console.log('Event:', event.title);
+          console.log('Event Type:', eventType);
+          console.log('Filter Type:', filterType);
+          console.log('Matches Type:', matchesType);
+          
+          return matchesType && matchesCity && matchesSearch;
+        });
+
+        if (filteredEvents.length === 0) {
+          container.innerHTML = '<div style="text-align: center; padding: 20px; color: #666;">لا توجد فعاليات تطابق معايير البحث</div>';
+        } else {
+          filteredEvents.forEach(event => {
+            addEventCard(event);
+          });
+        }
+      }
+      function addEventCard(event) {
+        const container = document.getElementById("eventsContainer");
+        const card = document.createElement("div");
+        card.className = "event-card";
+        
+        const storageKey = event.isDefault ? `event_${event.title}` : `event_${event.title}`;
+        const seatsKey = `${storageKey}_seats`;
+        const availableSeats = parseInt(localStorage.getItem(seatsKey)) || event.seatsAvailable || 0;        
+        let detailsPage;
+        if (event.isDefault) {
+          detailsPage = event.detailsPage;
+        } else {
+          detailsPage = `eventDetails.html?title=${encodeURIComponent(event.title)}`;
+        }
+        
+        // التحقق من حالة المفضلة
+        const favs = JSON.parse(localStorage.getItem("favoriteTickets")) || [];
+        const isFavorite = favs.some(fav => fav.name === event.title);
+
+        card.innerHTML = `
+          <div style="position: relative;">
+            <img src="${event.image}" alt="${event.title}" style="width: 100%; height: 200px; object-fit: cover; border-radius: 8px;">
+            <button onclick="toggleFavorite(this, '${event.title}')" 
+                    class="btn-favorite ${isFavorite ? 'active' : ''}"
+                    style="position: absolute; top: 10px; left: 10px; background: none; border: none; font-size: 25px; cursor: pointer; color: ${isFavorite ? 'red' : '#0288d1'};">
+              ${isFavorite ? '❤️' : '🤍'}
+            </button>
+          </div>
+          <h3 style="color: #0288d1; margin: 10px 0;">${event.title}</h3>
+          <p>${event.description}</p>
+          <p style="color: #666; font-size: 14px;">
+            <i class="fas fa-map-marker-alt"></i> ${event.isDefault ? event.location : event.location}
+          </p>
+          <span class="tag">${event.type}</span>
+          <span class="tag">${event.isDefault ? event.city : event.location}</span>
+          
+          <div class="event-footer">
+            <div class="event-details">
+              <div class="price-tag">${event.ticketPrice} ريال</div>
+              <div class="seats-info">
+                <i class="fas fa-chair"></i>
+                <span id="seats_${event.title}">${availableSeats} مقعد متاح</span>
+              </div>
+            </div>
+            <div style="display: flex; gap: 10px;">
+              <a href="${detailsPage}" class="book-now" style="background: #015f92;">
+                التفاصيل
+              </a>
+              <a href="pay.html?title=${encodeURIComponent(event.title)}&price=${event.ticketPrice}&seats=${availableSeats}" 
+                 class="book-now" 
+                 ${availableSeats <= 0 ? 'disabled' : ''}>
+                ${availableSeats <= 0 ? 'نفذت التذاكر' : 'احجز'}
+              </a>
+            </div>
+          </div>
+        `;
+        
+        container.appendChild(card);
+}
+
+// إضافة دالة تحديث المقاعد المتاحة
+function updateAvailableSeats(eventTitle, numberOfTickets) {
+    const storageKey = `event_${eventTitle}`;
+    const seatsKey = `${storageKey}_seats`;
+    
+    // الحصول على عدد المقاعد الحالي
+    let currentSeats = parseInt(localStorage.getItem(seatsKey)) || 0;
+    
+    // تحديث عدد المقاعد
+    const newSeats = Math.max(0, currentSeats - numberOfTickets);
+    
+    // حفظ العدد الجديد
+    localStorage.setItem(seatsKey, newSeats.toString());
+    
+    // تحديث العرض في الصفحة
+    const seatsElement = document.getElementById(`seats_${eventTitle}`);
+    if (seatsElement) {
+        seatsElement.textContent = `${newSeats} مقعد متاح`;
+    }
+    
+    // تحديث زر الحجز
+    const bookButtons = document.querySelectorAll(`a[href*="pay.html?title=${encodeURIComponent(eventTitle)}"]`);
+    bookButtons.forEach(button => {
+        if (newSeats <= 0) {
+            button.setAttribute('disabled', 'true');
+            button.textContent = 'نفذت التذاكر';
+        }
+    });
+}
+      function updateFavoriteButtons() {
+        try {
+          const favs = JSON.parse(localStorage.getItem("favoriteTickets")) || [];
+          const cards = document.querySelectorAll(".event-card");
+          
+          cards.forEach((card) => {
+            const title = card.querySelector("h3")?.textContent;
+            const btn = card.querySelector(".btn-favorite");
+            
+            if (title && btn && favs.some((e) => e.name === title)) {
+              btn.textContent = "❤️";
+              btn.classList.add("active");
+            } else if (btn) {
+              btn.textContent = "🤍";
+              btn.classList.remove("active");
+            }
+          });
+        } catch (error) {
+          console.error("خطأ في تحديث المفضلة:", error);
+        }
+      }
+
+      function toggleFavorite(btn, name) {
+        const favs = JSON.parse(localStorage.getItem("favoriteTickets")) || [];
+        const i = favs.findIndex((e) => e.name === name);
+
+        if (i < 0) {
+          const card = btn.closest(".event-card");
+          const image = card.querySelector("img").src;
+          
+          favs.push({ 
+            name, 
+            image,
+            page: card.querySelector("a.book-now").href
+          });
+          
+          btn.textContent = "❤️";
+          btn.style.color = "red";
+          btn.classList.add("active");
+        } else {
+          favs.splice(i, 1);
+          btn.textContent = "🤍";
+          btn.style.color = "#0288d1";
+          btn.classList.remove("active");
+        }
+
+        localStorage.setItem("favoriteTickets", JSON.stringify(favs));
+      }
+
+      // تعريف الردود الآلية للشات بوت
+      const botResponses = {
+  "مرحبا": "مرحباً بك في وجهتي! كيف يمكنني مساعدتك اليوم؟",
+  "السلام عليكم": "وعليكم السلام ورحمة الله وبركاته! كيف يمكنني خدمتك؟",
+  "كيف": "يمكنني مساعدتك في:\n- كيفية الحجز\n- معرفة الأسعار\n- معرفة المواقع\n- طرق الدفع\n- سياسة الإلغاء\nأو يمكنك إرسال استفسارك على البريد: support@wejhaty.com",
+  "الحجز": "يمكنك الحجز بسهولة عن طريق:\n1. اختيار الفعالية المناسبة\n2. الضغط على زر 'حجز الآن'\n3. إدخال بياناتك وإتمام عملية الدفع",
+  "سعر": "سعر التذكرة يختلف حسب الفعالية. يمكنك رؤية السعر مباشرة على بطاقة كل فعالية.",
+  "التذكرة": "سعر التذكرة يختلف حسب الفعالية. يمكنك رؤية السعر مباشرة على بطاقة كل فعالية.",
+  "وين": "يمكنك رؤية موقع كل فعالية في صفحة تفاصيل الفعالية مع خريطة توضيحية.",
+  "موقع": "يمكنك رؤية موقع كل فعالية في صفحة تفاصيل الفعالية مع خريطة توضيحية.",
+  "الدفع": "نقبل جميع وسائل الدفع:\n- البطاقات البنكية\n- مدى\n- آبل باي\n- وغيرها من وسائل الدفع الإلكترونية",
+  "الغاء": "يمكنك إلغاء الحجز قبل 24 ساعة من موعد الفعالية من خلال صفحة 'تذاكري'.",
+  "الإلغاء": "يمكنك إلغاء الحجز قبل 24 ساعة من موعد الفعالية من خلال صفحة 'تذاكري'.",
+  "شكرا": "شكراً لك! نحن هنا لخدمتك. هل هناك شيء آخر تحتاج مساعدة به؟",
+  "مشكلة": "نأسف لوجود مشكلة. يمكنك إرسال تفاصيل المشكلة على البريد: support@wejhaty.com وسيتم الرد عليك في أقرب وقت.",
+  "استفسار": "يمكنك إرسال استفسارك على البريد: support@wejhaty.com وسيتم الرد عليك خلال 24 ساعة.",
+  "تواصل": "يمكنك التواصل معنا عبر:\nالبريد: support@wejhaty.com\nأو اختيار أحد الخيارات التالية:\n- كيفية الحجز\n- الأسعار\n- المواقع\n- طرق الدفع\n- سياسة الإلغاء",
+  "default": "عذراً، لم أفهم طلبك. يمكنك:\n1. إعادة صياغة السؤال\n2. اختيار من الخيارات التالية:\n- كيفية الحجز\n- أسعار التذاكر\n- مواقع الفعاليات\n- طرق الدفع\n- سياسة الإلغاء\n\nأو يمكنك إرسال استفسارك على البريد: support@wejhaty.com"
+};
+
+      function toggleChat() {
+        const chatContainer = document.getElementById('chatContainer');
+        chatContainer.style.display = chatContainer.style.display === 'none' ? 'flex' : 'none';
+      }
+
+      function handleKeyPress(event) {
+        if (event.key === 'Enter') {
+          sendMessage();
+        }
+      }
+
+      function sendMessage() {
+        const input = document.getElementById('chatInput');
+        const message = input.value.trim();
+        
+        if (message) {
+          // إضافة رسالة المستخدم
+          addMessage(message, 'user-message');
+          
+          // إضافة رد البوت
+          setTimeout(() => {
+            const response = getBotResponse(message);
+            addMessage(response, 'bot-message');
+          }, 500);
+          
+          input.value = '';
+        }
+      }
+
+      function addMessage(text, className) {
+        const messagesContainer = document.getElementById('chatMessages');
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `message ${className}`;
+        messageDiv.textContent = text;
+        messagesContainer.appendChild(messageDiv);
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+      }
+      function getBotResponse(message) {
+  message = message.trim().toLowerCase();
+  
+  // البحث عن كلمات مفتاحية في الرسالة
+  for (let key in botResponses) {
+    // تحويل المفتاح للحروف الصغيرة للمقارنة
+    const lowercaseKey = key.toLowerCase();
+    
+    // إذا كانت الرسالة تحتوي على الكلمة المفتاحية
+    if (message.includes(lowercaseKey) || 
+        // أو إذا كانت الكلمة المفتاحية تحتوي على الرسالة
+        lowercaseKey.includes(message) ||
+        // أو إذا كانت المسافة بين الكلمتين صغيرة
+        message.split(' ').some(word => lowercaseKey.includes(word))) {
+      return botResponses[key];
+    }
+  }
+  
+  // إذا كانت الرسالة قصيرة جداً (أقل من 3 أحرف)
+  if (message.length < 3) {
+    return "يرجى كتابة المزيد من التفاصيل لأتمكن من مساعدتك بشكل أفضل.";
+  }
+  
+  // الرد الافتراضي
+  return botResponses.default;
+}
+      function addNewEvent(event) {
+        event.preventDefault();
+        
+        const title = document.getElementById("eventTitle").value;
+        const description = document.getElementById("eventDescription").value;
+        const city = document.getElementById("eventCity").value;
+        const type = document.getElementById("eventType").value;
+        const price = document.getElementById("eventPrice").value;
+        const image = document.getElementById("eventImage").value;
+        const location = document.getElementById("eventLocation").value;
+        const seats = document.getElementById("eventSeats").value || 100;
+
+        // التحقق من أن المدخلات باللغة العربية
+        if (!isArabicText(title) || !isArabicText(description) || !isArabicText(location)) {
+          alert("الرجاء إدخال جميع البيانات باللغة العربية");
+          return;
+        }
+        
+        const newEvent = {
+          title,
+          description,
+          city,
+          type,
+          ticketPrice: parseFloat(price),
+          image,
+          location,
+          seatsAvailable: parseInt(seats)
+        };
+
+        // حفظ الفعالية في قائمة الفعاليات
+        let events = JSON.parse(localStorage.getItem("events")) || [];
+        events.push(newEvent);
+        localStorage.setItem("events", JSON.stringify(events));
+
+        // حفظ تفاصيل الفعالية بشكل منفصل
+        localStorage.setItem(`event_${title}`, JSON.stringify(newEvent));
+        localStorage.setItem(`event_${title}_seats`, seats.toString());
+
+        alert("تم إضافة الفعالية بنجاح!");
+        window.location.href = "home.html";
+      }
+
+      // دالة للتحقق من النص العربي
+      function isArabicText(text) {
+        const arabicPattern = /[\u0600-\u06FF]/;
+        return arabicPattern.test(text);
+      }
+
+      // تحديث نموذج إضافة الفعالية
+      if (document.getElementById("addEventForm")) {
+        document.getElementById("addEventForm").innerHTML = `
+          <div class="form-group">
+            <label for="eventTitle">عنوان الفعالية</label>
+            <input type="text" id="eventTitle" required placeholder="أدخل عنوان الفعالية باللغة العربية">
+          </div>
+          <div class="form-group">
+            <label for="eventDescription">وصف الفعالية</label>
+            <textarea id="eventDescription" required placeholder="أدخل وصف الفعالية باللغة العربية"></textarea>
+          </div>
+          <div class="form-group">
+            <label for="eventCity">المدينة</label>
+            <select id="eventCity" required>
+              <option value="">اختر المدينة</option>
+              <option value="الرياض">الرياض</option>
+              <option value="جدة">جدة</option>
+              <option value="الدمام">الدمام</option>
+              <option value="مكة">مكة</option>
+              <option value="المدينة">المدينة</option>
+              <option value="الظهران">الظهران</option>
+              <option value="العلا">العلا</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="eventType">نوع الفعالية</label>
+            <select id="eventType" required>
+              <option value="">اختر النوع</option>
+              <option value="تاريخي">تاريخي</option>
+              <option value="مؤتمر">مؤتمر</option>
+              <option value="ورشة عمل">ورشة عمل</option>
+              <option value="مهرجان">مهرجان</option>
+              <option value="معرض">معرض</option>
+              <option value="تعليمي">تعليمي</option>
+              <option value="ثقافي">ثقافي</option>
+              <option value="رياضي">رياضي</option>
+              <option value="فني">فني</option>
+              <option value="ترفيهي">ترفيهي</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="eventPrice">سعر التذكرة (ريال)</label>
+            <input type="number" id="eventPrice" required min="0">
+          </div>
+          <div class="form-group">
+            <label for="eventImage">رابط الصورة</label>
+            <input type="url" id="eventImage" required placeholder="أدخل رابط صورة الفعالية">
+          </div>
+          <div class="form-group">
+            <label for="eventLocation">موقع الفعالية</label>
+            <input type="text" id="eventLocation" required placeholder="أدخل موقع الفعالية باللغة العربية">
+          </div>
+          <div class="form-group">
+            <label for="eventSeats">عدد المقاعد المتاحة</label>
+            <input type="number" id="eventSeats" min="1" value="100" required>
+          </div>
+          <button type="submit" class="submit-btn">إضافة الفعالية</button>
+        `;
+      }
+
+      // Event listeners setup
+      document.addEventListener('DOMContentLoaded', () => {
+        // Set up event listeners
+        document.getElementById('searchInput')?.addEventListener('input', searchEvents);
+        document.getElementById('cityFilter')?.addEventListener('change', searchEvents);
+        
+        document.querySelectorAll('.categories button').forEach(button => {
+          button.addEventListener('click', function() {
+            const type = this.getAttribute('data-type');
+            filterEvents(type, this);
+          });
+        });
+
+        // Initial load
+        searchEvents();
+      });
+      localStorage.setItem("userRole","user")
+
+    </script>
+  </body>
+</html>

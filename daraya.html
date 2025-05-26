@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>زيارة الدرعية</title>
+  <script src="translations.js"></script>
+  <script src="language.js"></script>
+  <style>
+    body {
+      font-family: 'Tahoma', sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+      color: #333;
+    }
+    header {
+      background-color: #0288d1;
+      color: white;
+      padding: 1rem;
+      text-align: center;
+      position: relative;
+    }
+    .container {
+      max-width: 900px;
+      margin: 20px auto;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    /* زر المشاركة */
+    .share-button-top {
+      position: absolute;
+      top: 15px;
+      left: 15px;
+      background-color: white;
+      color: #0288d1;
+      border: none;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      font-size: 20px;
+      cursor: pointer;
+      box-shadow: 0 0 5px rgba(0,0,0,0.2);
+    }
+    [dir="ltr"] .share-button-top {
+      left: auto;
+      right: 15px;
+    }
+    .share-button-top:hover {
+      background-color: #e0f3fc;
+    }
+    /* زر القلب */
+    .heart-button {
+      position: absolute;
+      top: 15px;
+      left: 70px;
+      background-color: white;
+      color: #0288d1;
+      border: none;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      font-size: 20px;
+      cursor: pointer;
+      box-shadow: 0 0 5px rgba(0,0,0,0.2);
+    }
+    [dir="ltr"] .heart-button {
+      left: auto;
+      right: 70px;
+    }
+    .heart-button.liked {
+      color: red;
+    }
+    .heart-button:hover {
+      background-color: #e0f3fc;
+    }
+    .images {
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+    }
+    .images img {
+      width: 100%;
+      max-width: 290px;
+      height: 180px;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+    .description {
+      margin-top: 20px;
+      line-height: 1.8;
+    }
+    .map {
+      margin-top: 20px;
+      height: 350px;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+    .comments {
+      margin-top: 30px;
+    }
+    .comments h3 {
+      color: #0288d1;
+    }
+    .comments ul {
+      list-style: none;
+      padding: 0;
+    }
+    .comments li {
+      background-color: #f0f0f0;
+      margin: 10px 0;
+      padding: 10px;
+      border-radius: 5px;
+    }
+    .comment-form {
+      display: flex;
+      flex-direction: column;
+      margin-top: 10px;
+    }
+    .comment-form textarea {
+      resize: none;
+      padding: 10px;
+      font-size: 14px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    .comment-form button {
+      margin-top: 10px;
+      padding: 10px;
+      background-color: #0288d1;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .comment-form button:hover {
+      background-color: #0271a8;
+    }
+    .action-buttons {
+      margin-top: 20px;
+      text-align: center;
+    }
+    .action-buttons a {
+      text-decoration: none;
+      background-color: #0288d1;
+      color: white;
+      padding: 12px 25px;
+      border-radius: 8px;
+      font-size: 16px;
+      display: inline-block;
+      margin: 10px;
+      transition: background-color 0.3s ease;
+    }
+    .action-buttons a:hover {
+      background-color: #0271a8;
+    }
+    .rating-section {
+      margin-top: 30px;
+      text-align: right;
+    }
+    #star-rating {
+      direction: rtl;
+      display: inline-block;
+      margin-top: 10px;
+    }
+    #star-rating .star {
+      font-size: 35px;
+      cursor: pointer;
+      color: #ccc;
+      transition: color 0.2s;
+      display: inline-block;
+    }
+    #star-rating .star.selected {
+      color: gold;
+    }
+    #rating-result {
+      margin-top: 10px;
+      font-weight: bold;
+      color: green;
+    }
+    #book-btn {
+  background-color: #0288d1;
+  color: white;
+  padding: 12px 25px;
+  border-radius: 8px;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+#book-btn:hover {
+  background-color: #0271a8;
+}
+
+    /* إضافة تصميم قسم السعر */
+    .price-section {
+      background: linear-gradient(135deg, #0288d1, #26c6da);
+      color: white;
+      padding: 20px;
+      border-radius: 15px;
+      text-align: center;
+      margin: 20px 0;
+      box-shadow: 0 4px 15px rgba(2, 136, 209, 0.2);
+    }
+    
+    .price-section .price-label {
+      font-size: 18px;
+      margin-bottom: 10px;
+      opacity: 0.9;
+    }
+    
+    .price-section .price-amount {
+      font-size: 32px;
+      font-weight: bold;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    .price-section .currency {
+      font-size: 24px;
+      margin-right: 5px;
+    }
+
+    /* Language switch button */
+    .language-switch {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background-color: white;
+      color: #0288d1;
+      border: none;
+      border-radius: 5px;
+      padding: 8px 15px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    [dir="ltr"] .language-switch {
+      right: auto;
+      left: 15px;
+    }
+    .language-switch:hover {
+      background-color: #e0f3fc;
+    }
+  </style>
+</head>
+<body>
+  <header>
+  <h1 id="activity-title">فعالية زيارة الدرعية</h1>
+    <!-- زر المشاركة -->
+    <button class="share-button-top" onclick="shareActivity()" title="مشاركة الفعالية">📤</button>
+    <!-- زر القلب -->
+    <button class="heart-button" onclick="toggleLike()" title="إعجاب">🤍</button>
+    <button class="language-switch" onclick="toggleLanguage()">English</button>
+  </header>
+
+  <div class="container">
+    <div class="images">
+      <img src="dr.jpeg" alt="الدرعية">
+      <img src="dr1.jpeg" alt="الدرعية 2">
+      <img src="dr2.jpeg" alt="الدرعية 3">
+    </div>
+
+    <!-- إضافة قسم السعر -->
+    <div class="price-section">
+      <div class="price-label" id="price-label">سعر التذكرة</div>
+      <div class="price-amount">
+        <span class="currency" id="currency">ريال</span>
+        150
+      </div>
+    </div>
+
+    <div class="description" id="event-description">
+      <p>
+        الدرعية هي قلب المملكة التاريخي، وواحدة من أهم الوجهات السياحية التي تعكس عراقة الماضي السعودي. تجول بين أسواقها القديمة، واستمتع بجمال عمارتها النجدية الأصيلة. ستجد فيها فعاليات ثقافية وموسيقية وعروض تراثية، وهي وجهة مثالية للعائلة ومحبي الثقافة والتاريخ. تجربة لا تُنسى لكل من يزور الرياض.
+      </p>
+    </div>
+
+    <div class="map">
+      <iframe 
+        src="https://www.google.com/maps?q=24.73701,46.57037&hl=ar&z=15&output=embed"
+        allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
+      </iframe>
+    </div>
+    <div class="rating-section">
+      <h3>قيّم هذه الفعالية</h3>
+      <div id="star-rating">
+        <span class="star" data-value="1">&#9733;</span>
+        <span class="star" data-value="2">&#9733;</span>
+        <span class="star" data-value="3">&#9733;</span>
+        <span class="star" data-value="4">&#9733;</span>
+        <span class="star" data-value="5">&#9733;</span>
+      </div>
+      <p id="rating-result">لم يتم التقييم بعد</p>
+    </div>
+    
+    <div class="comments">
+      <h3>التعليقات</h3>
+      <ul id="comments-list">
+        <li>مكان رائع جدًا أنصح بالزيارة!</li>
+        <li>حضرت إحدى الفعاليات وكانت التجربة ممتعة جدًا.</li>
+      </ul>
+
+      <div class="comment-form">
+        <textarea id="comment-input" rows="3" placeholder="اكتب تعليقك..."></textarea>
+        <button onclick="addComment()">إرسال</button>
+      </div>
+    </div>
+
+    <div class="action-buttons">
+      <a href="home.html">← الرجوع للصفحة الرئيسية</a>
+      <button id="book-btn">حجز الآن</button>
+    </div>
+  </div>
+
+  <script>
+     const storageKey = 'darayaActivityData';
+
+// دالة تهيئة البيانات
+function init() {
+    loadComments();
+    loadLikeState();
+    loadRating();
+}
+
+// دالة تحميل البيانات
+function loadData() {
+    return JSON.parse(localStorage.getItem(storageKey)) || {
+        comments: [],
+        isLiked: false,
+        rating: 0
+    };
+}
+
+// دالة حفظ البيانات
+function saveData(data) {
+    localStorage.setItem(storageKey, JSON.stringify(data));
+}
+
+// دالة إضافة تعليق
+function addComment() {
+    const input = document.getElementById('comment-input');
+    const comment = input.value.trim();
+    
+    if (comment) {
+        const data = loadData();
+        data.comments.push(comment);
+        saveData(data);
+        
+        const li = document.createElement('li');
+        li.textContent = comment;
+        document.getElementById('comments-list').appendChild(li);
+    const activityId = 'visit-diriyah'; // معرف الفعالية
+
+    // تحميل البيانات عند فتح الصفحة
+    document.addEventListener('DOMContentLoaded', function () {
+      loadComments();
+      loadLikeState();
+      loadRating();
+    });
+
+    function addComment() {
+      const input = document.getElementById("comment-input");
+      const comment = input.value.trim();
+      if (comment) {
+        const li = document.createElement("li");
+        li.textContent = comment;
+        document.getElementById("comments-list").appendChild(li);
+        input.value = '';
+        }
+    }
+
+    // دالة تحميل التعليقات
+    function loadComments() {
+        const data = loadData();
+        const commentsList = document.getElementById('comments-list');
+        commentsList.innerHTML = '';
+        
+        data.comments.forEach(comment => {
+            const li = document.createElement('li');
+            li.textContent = comment;
+            commentsList.appendChild(li);
+        });
+    }
+        // حفظ التعليق في localStorage
+        let comments = JSON.parse(localStorage.getItem(activityId + '-comments')) || [];
+        comments.push(comment);
+        localStorage.setItem(activityId + '-comments', JSON.stringify(comments));
+
+        input.value = "";
+      }
+    }
+
+    function loadComments() {
+      const comments = JSON.parse(localStorage.getItem(activityId + '-comments')) || [];
+      const list = document.getElementById("comments-list");
+      comments.forEach(comment => {
+        const li = document.createElement("li");
+        li.textContent = comment;
+        list.appendChild(li);
+      });
+    }
+
+    function shareActivity() {
+      const url = window.location.href;
+      navigator.clipboard.writeText(url);
+      alert("تم نسخ رابط الفعالية! يمكنك مشاركته الآن.");
+    }
+
+    function toggleLike() {
+      const heartButton = document.querySelector('.heart-button');
+      heartButton.classList.toggle('liked');
+
+      const liked = heartButton.classList.contains('liked');
+      heartButton.textContent = liked ? '❤️' : '🤍';
+
+      // حفظ حالة الإعجاب
+      localStorage.setItem(activityId + '-liked', liked);
+    }
+
+    function loadLikeState() {
+      const liked = localStorage.getItem(activityId + '-liked') === 'true';
+      const heartButton = document.querySelector('.heart-button');
+      if (liked) {
+        heartButton.classList.add('liked');
+        heartButton.textContent = '❤️';
+      }
+    }
+
+   // دالة تحميل التقييم
+   function loadRating() {
+        const data = loadData();
+        if (data.rating > 0) {
+            setRating(data.rating);
+            document.getElementById('rating-result').textContent = `تم التقييم: ${data.rating} من 5 نجوم`;
+            hasRated = true;
+        }
+    }
+
+    // دالة تعيين التقييم
+    function setRating(ratingValue) {
+        document.querySelectorAll('#star-rating .star').forEach(s => {
+            if (parseInt(s.getAttribute('data-value')) <= ratingValue) {
+                s.classList.add('selected');
+            } else {
+                s.classList.remove('selected');
+            }
+        });
+    }
+
+    let hasRated = false;
+
+    // إضافة مستمعي الأحداث للنجوم
+    document.querySelectorAll('#star-rating .star').forEach(star => {
+        star.addEventListener('click', function() {
+            if (hasRated) {
+                alert('لقد قمت بالتقييم بالفعل.');
+                return;
+            }
+
+            const ratingValue = parseInt(this.getAttribute('data-value'));
+            setRating(ratingValue);
+            document.getElementById('rating-result').textContent = `تم التقييم: ${ratingValue} من 5 نجوم`;
+
+            hasRated = true;
+
+            const data = loadData();
+            data.rating = ratingValue;
+            saveData(data);
+
+            alert('شكرًا لتقييمك!');
+        });
+    });
+
+    // تهيئة الصفحة عند التحميل
+    window.onload = init;
+</script>
+       
+ document.getElementById('book-btn').addEventListener('click', () => {
+  // قراءة عدد المقاعد المتاح من localStorage
+  const savedSeats = localStorage.getItem('event_زيارة الدرعية_seats') || "50";
+  const price = 150; // السعر الثابت للفعالية
+  
+  window.location.href = `pay.html?title=${encodeURIComponent("زيارة الدرعية")}&price=${price}&seats=${savedSeats}`;
+});
+
+    
+
+    function toggleLanguage() {
+      const currentLang = getCurrentLanguage();
+      const newLang = currentLang === 'ar' ? 'en' : 'ar';
+      changeLanguage(newLang);
+      updateContent();
+    }
+
+    function updateContent() {
+      const currentLang = getCurrentLanguage();
+      const content = translations[currentLang];
+      
+      // Update HTML direction and language
+      document.documentElement.lang = currentLang;
+      document.documentElement.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
+      
+      // Update content
+      document.title = content.title;
+      document.getElementById('activity-title').textContent = content.title;
+      document.getElementById('price-label').textContent = content.priceLabel;
+      document.getElementById('currency').textContent = content.currency;
+      document.getElementById('event-description').innerHTML = `<p>${content.description}</p>`;
+      
+      // Update buttons
+      const shareButton = document.querySelector('.share-button-top');
+      const heartButton = document.querySelector('.heart-button');
+      const langButton = document.querySelector('.language-switch');
+      
+      shareButton.title = content.shareButton;
+      heartButton.title = content.likeButton;
+      langButton.textContent = content.languageButton;
+    }
+
+    // Initialize page with correct language
+    document.addEventListener('DOMContentLoaded', () => {
+      const currentLang = getCurrentLanguage();
+      document.documentElement.lang = currentLang;
+      document.documentElement.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
+      updateContent();
+    });
+  </script>
+</body>
+</html>

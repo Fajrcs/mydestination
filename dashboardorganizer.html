@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>لوحة تحكم المنظم</title>
+    <style>
+      body {
+        font-family: Tahoma, sans-serif;
+        background: linear-gradient(to left, #76f0da, #acb6e5);
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        min-height: 100vh;
+      }
+
+      header {
+        background-color: white;
+        width: 100%;
+        padding: 1rem 2rem;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        position: relative;
+      }
+
+      header h1 {
+        margin: 0;
+        color: #333;
+      }
+
+      header p {
+        color: #777;
+      }
+
+      .profile-box {
+        position: absolute;
+        top: 50px;
+        right: 30px;
+        font-size: 20px;
+        color: #333;
+        cursor: pointer;
+      }
+
+      .profile-box:hover {
+        text-decoration: underline; /
+      }
+
+      .dashboard {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        margin: 2rem auto;
+        gap: 20px;
+        max-width: 1000px;
+      }
+
+      .card {
+        background-color: white;
+        border-radius: 12px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        width: 250px;
+        padding: 20px;
+        text-align: center;
+        transition: transform 0.3s;
+      }
+
+      .card:hover {
+        transform: translateY(-5px);
+      }
+
+      .card h3 {
+        margin-bottom: 10px;
+        color: #333;
+      }
+
+      .card p {
+        font-size: 14px;
+        color: #666;
+      }
+
+      .card a {
+        display: inline-block;
+        margin-top: 10px;
+        padding: 10px 15px;
+        background-color: #45a049;
+        color: white;
+        border-radius: 8px;
+        text-decoration: none;
+        font-size: 14px;
+      }
+
+      .card a:hover {
+        background-color: #388e3c;
+      }
+
+      @media (max-width: 600px) {
+        .card {
+          width: 90%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <!-- خانة الملف الشخصي -->
+      <a href="p.html" class="profile-box"> الملف الشخصي 👤 </a>
+
+      <h1>اهلا بعودتك 👋</h1>
+      <p>إدارة فعالياتك بسهولة من هنا</p>
+    </header>
+
+    <section class="dashboard">
+      <div class="card">
+        <h3>➕ إنشاء فعالية</h3>
+        <p>أضف فعالية جديدة إلى قائمتك</p>
+        <a href="createevent.html">إنشاء</a>
+      </div>
+      <div class="card">
+        <h3>📋 قائمة الفعاليات</h3>
+        <p>عرض وتحرير الفعاليات المنشورة</p>
+        <a href="eventlist.html">عرض</a>
+      </div>
+      <div class="card">
+        <h3>👥 المشاركون</h3>
+        <p>عرض قائمة الحضور لكل فعالية</p>
+        <a href="part.html">المشاركين</a>
+      </div>
+      <div class="card">
+        <h3>📣 إرسال إشعار</h3>
+        <p>أرسل تنبيه أو رسالة للمشاركين</p>
+        <a href="notification.html">إرسال</a>
+      </div>
+      <div class="card">
+        <h3>🗨 التقييمات</h3>
+        <p>اطّلع على تقييمات الحضور ورد عليهم</p>
+        <a href="comment.html">عرض</a>
+      </div>
+      <div class="card">
+        <h3>📊 الإحصائيات</h3>
+        <p>تحليل أداء الفعاليات والمشاركات</p>
+        <a href="chart.html">عرض</a>
+      </div>
+    </section>
+  </body>
+</html>

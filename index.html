@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>تسجيل - My Destination</title>
+    <style>
+      body {
+        font-family: "Tahoma", sans-serif;
+        background: linear-gradient(to left, #76f0da, #acb6e5);
+        margin: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+      }
+
+      .register-container {
+        background-color: white;
+        padding: 2.5rem 2rem;
+        border-radius: 15px;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+        width: 420px;
+        text-align: center;
+      }
+
+      h2 {
+        margin-top: 0;
+        margin-bottom: 20px;
+        font-size: 22px;
+        color: #333;
+      }
+
+      .button-container {
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+
+      a.button {
+        flex: 1;
+        padding: 12px 0;
+        font-size: 16px;
+        color: white;
+        background-color: #007bff;
+        text-decoration: none;
+        border-radius: 8px;
+        text-align: center;
+        transition: background-color 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+      }
+
+      a.button:hover {
+        background-color: #0056b3;
+      }
+
+      a.button:focus {
+        outline: 2px solid #0056b3;
+        outline-offset: 2px;
+      }
+
+      .links {
+        margin-top: 15px;
+        text-align: center;
+      }
+
+      .links a {
+        text-decoration: none;
+        color: #00ff26;
+        font-size: 14px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="register-container">
+      <h2>من فضلك اختر نوع التسجيل</h2>
+      <div class="button-container">
+        <a href="login.html" class="button" aria-label="تسجيل دخول مستخدم">
+          👤 تسجيل دخول مستخدم
+        </a>
+        <a
+          href="loginOrganizer.html"
+          class="button"
+          aria-label="تسجيل دخول منظم"
+        >
+          🧑‍💼 تسجيل دخول منظم
+        </a>
+      </div>
+    </div>
+  </body>
+</html>

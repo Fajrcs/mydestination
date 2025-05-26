@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>الملف الشخصي</title>
+    <style>
+      body {
+        font-family: "Cairo", sans-serif;
+        margin: 0;
+        padding: 0;
+        background: #f0f8ff;
+        color: #333;
+      }
+
+      header {
+        background-color: #0288d1;
+        padding: 2rem 1rem;
+        text-align: center;
+        color: white;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .back-button {
+        position: absolute;
+        left: 20px;
+        background: none;
+        border: none;
+        color: white;
+        font-size: 1.5rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        padding: 5px 10px;
+        border-radius: 5px;
+        transition: background-color 0.3s;
+      }
+
+      .back-button:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+      }
+
+      [dir="rtl"] .back-button {
+        left: auto;
+        right: 20px;
+      }
+
+      header h1 {
+        margin: 0;
+        font-size: 2.5rem;
+        letter-spacing: 1px;
+      }
+
+      .container {
+        max-width: 1000px;
+        margin: 40px auto;
+        background: #ffffff;
+        padding: 40px;
+        border-radius: 20px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      }
+
+      .profile-section,
+      .favorites-section {
+        margin-bottom: 40px;
+      }
+
+      h2 {
+        font-size: 2rem;
+        color: #0288d1;
+        border-bottom: 2px solid #0288d1;
+        padding-bottom: 10px;
+        margin-bottom: 25px;
+      }
+
+      .info {
+        font-size: 1.1rem;
+        margin: 10px 0;
+        color: #555;
+      }
+
+      .info strong {
+        color: #01579b;
+      }
+
+      .btn {
+        display: inline-block;
+        margin-top: 15px;
+        background: #0288d1;
+        color: white;
+        border: none;
+        padding: 10px 22px;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background 0.3s ease;
+        font-size: 1rem;
+        margin-right: 10px;
+      }
+
+      .btn:hover {
+        background: #0277bd;
+      }
+
+      .btn-logout {
+        background-color: #d32f2f;
+      }
+
+      .btn-logout:hover {
+        background-color: #b71c1c;
+      }
+
+      .logout {
+        text-align: left;
+      }
+
+      .favorites-section .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 20px;
+      }
+
+      .favorite-card {
+        background-color: #e1f5fe;
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        padding: 10px;
+        transition: transform 0.3s ease;
+        cursor: pointer; /* مهم عشان يظهر إن البطاقة قابلة للنقر */
+      }
+
+      .favorite-card:hover {
+        transform: scale(1.03);
+      }
+
+      .favorite-card img {
+        width: 100%;
+        height: 150px;
+        object-fit: cover;
+        border-radius: 10px;
+      }
+
+      .favorite-card h3 {
+        margin-top: 10px;
+        font-size: 1rem;
+        color: #0288d1;
+      }
+
+      .language-switch {
+        text-align: right;
+        margin-top: 20px;
+      }
+
+      .language-switch button {
+        background-color: #0288d1;
+        color: white;
+        padding: 8px 16px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+      }
+
+      .language-switch button:hover {
+        background-color: #0277bd;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <button class="back-button" onclick="window.location.href='home.html'">
+        <span class="arrow">←</span>
+        <span class="text">رجوع</span>
+      </button>
+      <h1>👤 الملف الشخصي</h1>
+    </header>
+
+    <div class="container">
+      <div class="logout">
+        <button class="btn btn-logout" onclick="logout()">تسجيل الخروج</button>
+      </div>
+
+      <section class="profile-section">
+        <h2>معلومات المستخدم</h2>
+        <p class="info" id="labelName">
+          الاسم: <strong id="fullName">جارٍ التحميل...</strong>
+        </p>
+        <p class="info" id="labelEmail">
+          البريد الإلكتروني: <strong id="userEmail">جارٍ التحميل...</strong>
+        </p>
+        <p class="info" id="labelPhone">
+          رقم الجوال: <strong id="userPhone">جارٍ التحميل...</strong>
+        </p>
+        <p class="info" id="labelNationality">
+          الجنسية: <strong id="userNationality">جارٍ التحميل...</strong>
+        </p>
+        <p class="info" id="labelUserType">
+          نوع المستخدم: <strong id="userType">جارٍ التحميل...</strong>
+        </p>
+
+        <button class="btn" onclick="window.location.href='ChangePas.html'">
+          تغيير كلمة المرور
+        </button>
+        <button class="btn" onclick="window.location.href='editprofile.html'">
+          تعديل الملف الشخصي
+        </button>
+      </section>
+
+      <section class="favorites-section">
+        <h2>🎫 التذاكر المفضلة</h2>
+        <div class="grid" id="favoritesList">
+          <p>جارٍ التحميل...</p>
+        </div>
+      </section>
+
+      <div class="language-switch">
+        <button onclick="switchLanguage()">تغيير اللغة إلى الإنجليزية</button>
+      </div>
+    </div>
+    <div id="favoritesContainer"></div>
+
+    <script src="translations.js"></script>
+    <script src="language.js"></script>
+    <script>
+      function logout() {
+        localStorage.removeItem("loggedInUser");
+        const currentLang = getCurrentLanguage();
+        alert(currentLang === 'en' ? "Logged out successfully" : "تم تسجيل الخروج");
+        window.location.href = "index.html";
+      }
+
+      function switchLanguage() {
+        const currentLang = getCurrentLanguage();
+        const newLang = currentLang === 'ar' ? 'en' : 'ar';
+        changeLanguage(newLang);
+        updateLanguage();
+      }
+
+      function updateLanguage() {
+        const currentLang = getCurrentLanguage();
+        const isEnglish = currentLang === 'en';
+        
+        // تحديث عنوان الصفحة
+        document.title = isEnglish ? "Profile" : "الملف الشخصي";
+        
+        // تحديث زر الرجوع
+        const backButton = document.querySelector('.back-button');
+        backButton.querySelector('.text').textContent = isEnglish ? "Back" : "رجوع";
+        backButton.querySelector('.arrow').textContent = isEnglish ? "←" : "→";
+        
+        // تحديث نص زر تغيير اللغة
+        document.querySelector(".language-switch button").textContent = 
+          isEnglish ? "التغيير إلى العربية" : "Switch to English";
+
+        // تحديث باقي العناصر
+        document.querySelector("header h1").textContent =
+          isEnglish ? "👤 Profile" : "👤 الملف الشخصي";
+        document.querySelector(".logout .btn").textContent =
+          isEnglish ? "Log Out" : "تسجيل الخروج";
+        document.querySelector(".profile-section h2").textContent =
+          isEnglish ? "User Info" : "معلومات المستخدم";
+        document.querySelector(".favorites-section h2").textContent =
+          isEnglish ? "🎫 Favorite Tickets" : "🎫 التذاكر المفضلة";
+        document.querySelectorAll(".btn")[1].textContent =
+          isEnglish ? "Change Password" : "تغيير كلمة المرور";
+        document.querySelectorAll(".btn")[2].textContent =
+          isEnglish ? "Edit Profile" : "تعديل الملف الشخصي";
+
+        // تحديث التسميات
+        document.getElementById("labelName").childNodes[0].nodeValue =
+          isEnglish ? "Name: " : "الاسم: ";
+        document.getElementById("labelEmail").childNodes[0].nodeValue =
+          isEnglish ? "Email: " : "البريد الإلكتروني: ";
+        document.getElementById("labelPhone").childNodes[0].nodeValue =
+          isEnglish ? "Phone: " : "رقم الجوال: ";
+        document.getElementById("labelNationality").childNodes[0].nodeValue =
+          isEnglish ? "Nationality: " : "الجنسية: ";
+        document.getElementById("labelUserType").childNodes[0].nodeValue =
+          isEnglish ? "User Type: " : "نوع المستخدم: ";
+
+        // تحديث نوع المستخدم
+        const userType = document.getElementById("userType");
+        if (userType.textContent === "مستخدم" || userType.textContent === "user") {
+          userType.textContent = isEnglish ? "user" : "مستخدم";
+        } else if (userType.textContent === "منظم" || userType.textContent === "organizer") {
+          userType.textContent = isEnglish ? "organizer" : "منظم";
+        }
+
+        // تحديث المفضلات
+        loadFavorites();
+      }
+
+      window.onload = function () {
+        // تهيئة اللغة عند تحميل الصفحة
+        const currentLang = getCurrentLanguage();
+        document.documentElement.lang = currentLang;
+        document.documentElement.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
+        updateLanguage();
+        loadFavorites();
+
+        const currentUser = JSON.parse(localStorage.getItem("loggedInUser"));
+        if (currentUser) {
+          document.getElementById("fullName").textContent = currentUser.fullName;
+          document.getElementById("userEmail").textContent = currentUser.email;
+          document.getElementById("userPhone").textContent = currentUser.phone;
+          document.getElementById("userNationality").textContent = currentUser.nationality;
+          document.getElementById("userType").textContent =
+            currentUser.type === "user" ? (currentLang === 'en' ? "user" : "مستخدم") : 
+                                        (currentLang === 'en' ? "organizer" : "منظم");
+        } else {
+          window.location.href = "index.html";
+        }
+      };
+
+      function loadFavorites() {
+        const currentLang = getCurrentLanguage();
+        const isEnglish = currentLang === 'en';
+        const favoritesList = document.getElementById("favoritesList");
+        favoritesList.innerHTML = "";
+
+        const favoriteTickets = JSON.parse(localStorage.getItem("favoriteTickets")) || [];
+
+        if (favoriteTickets.length === 0) {
+          favoritesList.innerHTML = isEnglish ? 
+            "<p>No favorite tickets found.</p>" : 
+            "<p>لا توجد تذاكر مفضلة حالياً.</p>";
+        } else {
+          favoriteTickets.forEach((ticket) => {
+            // تحديث عرض البطاقة حسب اللغة المختارة
+            const displayName = isEnglish ? ticket.nameEn || ticket.name : ticket.name;
+            
+            const card = document.createElement("div");
+            card.className = "favorite-card";
+            card.innerHTML = `
+              <img src="${ticket.image}" alt="${displayName}">
+              <h3>${displayName}</h3>
+            `;
+
+            card.addEventListener("click", () => {
+              if (ticket.page && ticket.page.trim() !== "") {
+                window.location.href = ticket.page;
+              } else {
+                alert(isEnglish ? 
+                  "Event page link is not available." : 
+                  "رابط الصفحة غير متوفر لهذه الفعالية.");
+              }
+            });
+
+            favoritesList.appendChild(card);
+          });
+        }
+      }
+    </script>
+  </body>
+</html>

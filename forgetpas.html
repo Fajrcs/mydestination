@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="ar">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>نسيت كلمة المرور مع تحقق</title>
+    <style>
+      body {
+        font-family: "Tahoma", sans-serif;
+        background: linear-gradient(to left, #76f0da, #acb6e5);
+        margin: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+      }
+      .container {
+        background: white;
+        padding: 25px 30px;
+        border-radius: 10px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        width: 350px;
+        direction: rtl;
+        text-align: right;
+      }
+      h2 {
+        margin-bottom: 20px;
+        color: #333;
+        text-align: center;
+      }
+      label {
+        display: block;
+        margin-bottom: 6px;
+        font-weight: bold;
+        color: #555;
+      }
+      select,
+      input {
+        width: 100%;
+        padding: 8px 10px;
+        margin-bottom: 15px;
+        border: 1.5px solid #ccc;
+        border-radius: 5px;
+        font-size: 15px;
+        box-sizing: border-box;
+      }
+      select:focus,
+      input:focus {
+        border-color: #76f0da;
+        outline: none;
+      }
+      button {
+        width: 100%;
+        padding: 10px;
+        background-color: #007bff; /* لون أزرق */
+        border: none;
+        border-radius: 6px;
+        color: white;
+        font-weight: bold;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
+      button:hover {
+        background-color: #0056b3;
+      }
+      #verificationSection {
+        margin-top: 15px;
+      }
+      #message {
+        margin-top: 10px;
+        min-height: 20px;
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h2>نسيت كلمة المرور مع تحقق</h2>
+
+      <form id="emailForm">
+        <label for="userType">اختر نوع المستخدم:</label>
+        <select id="userType" required>
+          <option value="">-- اختر --</option>
+          <option value="users">مستخدم عادي</option>
+          <option value="organizers">منظم</option>
+        </select>
+
+        <label for="username">اسم المستخدم أو البريد:</label>
+        <input type="text" id="username" required />
+
+        <button type="submit">إرسال رمز التحقق</button>
+      </form>
+
+      <div id="verificationSection" style="display: none">
+        <p>رمز التحقق تم إرساله على الإيميل (محاكاة): <b id="sentCode"></b></p>
+
+        <label for="inputCode">أدخل رمز التحقق:</label>
+        <input type="text" id="inputCode" />
+
+        <label for="newPassword">كلمة المرور الجديدة:</label>
+        <input type="password" id="newPassword" />
+
+        <button id="resetPasswordBtn">إعادة تعيين كلمة المرور</button>
+      </div>
+
+      <p id="message" style="color: red"></p>
+    </div>
+
+    <script>
+      let generatedCode = null;
+      let currentUserType = null;
+      let currentUserIndex = null;
+      let usersList = [];
+
+      document
+        .getElementById("emailForm")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+          const userType = document.getElementById("userType").value;
+          const username = document.getElementById("username").value.trim();
+
+          if (!userType || !username) {
+            document.getElementById("message").style.color = "red";
+            document.getElementById("message").textContent =
+              "يرجى تعبئة جميع الحقول.";
+            return;
+          }
+
+          usersList = JSON.parse(localStorage.getItem(userType)) || [];
+          const userIndex = usersList.findIndex(
+            (u) => u.username === username || u.email === username
+          );
+
+          if (userIndex === -1) {
+            document.getElementById("message").style.color = "red";
+            document.getElementById("message").textContent =
+              "المستخدم غير موجود.";
+            return;
+          }
+
+          currentUserType = userType;
+          currentUserIndex = userIndex;
+
+          generatedCode = Math.floor(
+            100000 + Math.random() * 900000
+          ).toString();
+
+          document.getElementById("sentCode").textContent = generatedCode;
+          document.getElementById("verificationSection").style.display =
+            "block";
+          document.getElementById("message").textContent = "";
+        });
+
+      document
+        .getElementById("resetPasswordBtn")
+        .addEventListener("click", function () {
+          const inputCode = document.getElementById("inputCode").value.trim();
+          const newPassword = document.getElementById("newPassword").value;
+
+          if (!inputCode || !newPassword) {
+            document.getElementById("message").style.color = "red";
+            document.getElementById("message").textContent =
+              "يرجى تعبئة رمز التحقق وكلمة المرور الجديدة.";
+            return;
+          }
+
+          if (inputCode !== generatedCode) {
+            document.getElementById("message").style.color = "red";
+            document.getElementById("message").textContent =
+              "رمز التحقق غير صحيح.";
+            return;
+          }
+
+          usersList[currentUserIndex].password = newPassword;
+          localStorage.setItem(currentUserType, JSON.stringify(usersList));
+
+          document.getElementById("message").style.color = "green";
+          document.getElementById("message").textContent =
+            "تم تحديث كلمة المرور بنجاح. سيتم إعادة التوجيه...";
+
+          document.getElementById("verificationSection").style.display = "none";
+          document.getElementById("emailForm").reset();
+
+          setTimeout(() => {
+            window.location.href = "firstPage.html"; // عدل اسم الصفحة حسب ملفك
+          }, 2000);
+        });
+    </script>
+  </body>
+</html>

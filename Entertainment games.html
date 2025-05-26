@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>مهرجان الألعاب الترفيهية</title>
+  <style>
+    body {
+      font-family: 'Tahoma', sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+      color: #333;
+    }
+    header {
+      background-color: #0288d1;
+      color: white;
+      padding: 1rem;
+      text-align: center;
+      position: relative;
+    }
+    .container {
+      max-width: 900px;
+      margin: 20px auto;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    /* زر المشاركة */
+    .share-button-top {
+      position: absolute;
+      top: 15px;
+      left: 15px;
+      background-color: white;
+      color: #0288d1;
+      border: none;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      font-size: 20px;
+      cursor: pointer;
+      box-shadow: 0 0 5px rgba(0,0,0,0.2);
+    }
+    .share-button-top:hover {
+      background-color: #e0f3fc;
+    }
+    /* زر القلب */
+    .heart-button {
+      position: absolute;
+      top: 15px;
+      left: 70px;
+      background-color: white;
+      color: #0288d1;
+      border: none;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      font-size: 20px;
+      cursor: pointer;
+      box-shadow: 0 0 5px rgba(0,0,0,0.2);
+    }
+    .heart-button.liked {
+      color: red;
+    }
+    .heart-button:hover {
+      background-color: #e0f3fc;
+    }
+    .images {
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+    }
+    .images img {
+      width: 100%;
+      max-width: 290px;
+      height: 180px;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+    .description {
+      margin-top: 20px;
+      line-height: 1.8;
+    }
+    .map {
+      margin-top: 20px;
+      height: 350px;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+    .comments {
+      margin-top: 30px;
+    }
+    .comments h3 {
+      color: #0288d1;
+    }
+    .comments ul {
+      list-style: none;
+      padding: 0;
+    }
+    .comments li {
+      background-color: #f0f0f0;
+      margin: 10px 0;
+      padding: 10px;
+      border-radius: 5px;
+    }
+    .comment-form {
+      display: flex;
+      flex-direction: column;
+      margin-top: 10px;
+    }
+    .comment-form textarea {
+      resize: none;
+      padding: 10px;
+      font-size: 14px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    .comment-form button {
+      margin-top: 10px;
+      padding: 10px;
+      background-color: #0288d1;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .comment-form button:hover {
+      background-color: #0271a8;
+    }
+    .action-buttons {
+      margin-top: 20px;
+      text-align: center;
+    }
+    .action-buttons a {
+      text-decoration: none;
+      background-color: #0288d1;
+      color: white;
+      padding: 12px 25px;
+      border-radius: 8px;
+      font-size: 16px;
+      display: inline-block;
+      margin: 10px;
+      transition: background-color 0.3s ease;
+    }
+    .action-buttons a:hover {
+      background-color: #0271a8;
+    }
+    .rating-section {
+  margin-top: 30px;
+  text-align: right;
+}
+
+#star-rating {
+  direction: rtl;
+  display: inline-block;
+  margin-top: 10px;
+}
+
+#star-rating .star {
+  font-size: 35px;
+  cursor: pointer;
+  color: #ccc;
+  transition: color 0.2s;
+  display: inline-block;
+}
+
+#star-rating .star.selected {
+  color: gold;
+}
+
+#rating-result {
+  margin-top: 10px;
+  font-weight: bold;
+  color: green;
+}
+.action-buttons button {
+  background-color: #0288d1;
+  color: white;
+  padding: 12px 25px;
+  border-radius: 8px;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+.action-buttons button:hover {
+  background-color: #0271a8;
+}
+
+    /* إضافة تصميم قسم السعر */
+    .price-section {
+      background: linear-gradient(135deg, #0288d1, #26c6da);
+      color: white;
+      padding: 20px;
+      border-radius: 15px;
+      text-align: center;
+      margin: 20px 0;
+      box-shadow: 0 4px 15px rgba(2, 136, 209, 0.2);
+    }
+    
+    .price-section .price-label {
+      font-size: 18px;
+      margin-bottom: 10px;
+      opacity: 0.9;
+    }
+    
+    .price-section .price-amount {
+      font-size: 32px;
+      font-weight: bold;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    .price-section .currency {
+      font-size: 24px;
+      margin-right: 5px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1 id="activity-title">مهرجان الألعاب الترفيهية</h1>
+    <!-- زر المشاركة -->
+    <button class="share-button-top" onclick="shareActivity()" title="مشاركة الفعالية">📤</button>
+    <!-- زر القلب -->
+    <button class="heart-button" onclick="toggleLike()" title="إعجاب">🤍</button>
+  </header>
+
+  <div class="container">
+    <div class="images">
+      <img src="tr2.jpg">
+      <img src="tr.jpg">
+      <img src="tr1.webp">
+    </div>
+
+    <!-- إضافة قسم السعر -->
+    <div class="price-section">
+      <div class="price-label">سعر التذكرة</div>
+      <div class="price-amount">
+        <span class="currency">ريال</span>
+        120
+      </div>
+    </div>
+
+    <div class="description">
+      <p>
+        مهرجان الألعاب الترفيهية هو واحد من أضخم الفعاليات الترفيهية في المملكة. يشمل المهرجان العديد من الأنشطة الممتعة لجميع الأعمار، من ألعاب تفاعلية، معارض روبوتات، إلى العروض الموسيقية والرقصات الحية. كما يحتوي على منصات طعام ومسابقات مختلفة مما يجعله وجهة مثالية للعائلات والأطفال.
+      </p>
+    </div>
+
+    <div class="map">
+      <iframe 
+        src="https://www.google.com/maps?q=24.7109,46.7195&hl=ar&z=15&output=embed"
+        allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
+      </iframe>
+    </div>
+    <div class="rating-section">
+      <h3>قيّم هذه الفعالية</h3>
+      <div id="star-rating">
+        <span class="star" data-value="1">&#9733;</span>
+        <span class="star" data-value="2">&#9733;</span>
+        <span class="star" data-value="3">&#9733;</span>
+        <span class="star" data-value="4">&#9733;</span>
+        <span class="star" data-value="5">&#9733;</span>
+      </div>
+      <p id="rating-result">لم يتم التقييم بعد</p>
+    </div>
+    
+     
+    
+    <div class="comments">
+      <h3>التعليقات</h3>
+      <ul id="comments-list">
+        <li>مهرجان رائع جداً! كانت الأنشطة متنوعة وشيقة.</li>
+        <li>أفضل مكان لقضاء عطلة نهاية الأسبوع مع العائلة!</li>
+      </ul>
+
+      <div class="comment-form">
+        <textarea id="comment-input" rows="3" placeholder="اكتب تعليقك..."></textarea>
+        <button onclick="addComment()">إرسال</button>
+      </div>
+    </div>
+
+    <div class="action-buttons">
+      <a href="home.html">← الرجوع للصفحة الرئيسية</a>
+      <button id="book-btn">حجز الآن</button>
+    </div>
+  </div>
+
+  <script>
+    function addComment() {
+      const input = document.getElementById("comment-input");
+      const comment = input.value.trim();
+      if (comment) {
+        const li = document.createElement("li");
+        li.textContent = comment;
+        document.getElementById("comments-list").appendChild(li);
+        input.value = "";
+      }
+    }
+
+    function shareActivity() {
+      const url = window.location.href;
+      navigator.clipboard.writeText(url);
+      alert("تم نسخ رابط الفعالية! يمكنك مشاركته الآن.");
+    }
+
+    function toggleLike() {
+      const heartButton = document.querySelector('.heart-button');
+      heartButton.classList.toggle('liked');
+      if (heartButton.classList.contains('liked')) {
+        heartButton.textContent = '❤️'; // أحمر
+      } else {
+        heartButton.textContent = '🤍'; // أبيض
+      }
+    }
+  
+    let hasRated = false;
+
+document.querySelectorAll('#star-rating .star').forEach(star => {
+  star.addEventListener('click', function () {
+    if (hasRated) {
+      alert('لقد قمت بالتقييم بالفعل.');
+      return;
+    }
+
+    const ratingValue = parseInt(this.getAttribute('data-value'));
+
+    // تلوين النجوم
+    document.querySelectorAll('#star-rating .star').forEach(s => {
+      if (parseInt(s.getAttribute('data-value')) <= ratingValue) {
+        s.classList.add('selected');
+      }
+    });
+
+    // تحديث النص
+    document.getElementById('rating-result').textContent = `تم التقييم: ${ratingValue} من 5 نجوم`;
+
+    // منع التقييم مرة ثانية
+    hasRated = true;
+
+    // إرسال التقييم (مثلاً للكونسول أو API)
+    console.log("تم إرسال التقييم:", ratingValue);
+
+    alert('شكرًا لتقييمك!');
+  });
+});
+  // تعريف activityId ثابت
+    const activityId = 'ithraa';
+
+    // حدث زر حجز الآن
+    document.getElementById('book-btn').addEventListener('click', () => {
+      // قراءة عدد المقاعد المتاح من localStorage
+      const savedSeats = localStorage.getItem('event_مهرجان الألعاب الترفيهية_seats') || "50";
+      const price = 120; // السعر الثابت للفعالية
+      
+      window.location.href = `pay.html?title=${encodeURIComponent("مهرجان الألعاب الترفيهية")}&price=${price}&seats=${savedSeats}`;
+    });
+
+    // تهيئة الصفحة عند التحميل
+    window.onload = init;
+  </script>
+</body>
+</html>
